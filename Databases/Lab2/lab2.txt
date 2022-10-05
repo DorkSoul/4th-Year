@@ -1,0 +1,118 @@
+drop table if exists movie_directors;
+drop table if exists director;
+drop table if exists genre;
+drop table if exists casts;
+drop table if exists actor;
+drop table if exists movie;
+
+create TABLE IF NOT EXISTS actor (
+    id INTEGER PRIMARY KEY,
+    fname VARCHAR (30) NOT NULL,
+    lname VARCHAR (30) NOT NULL,
+    gender VARCHAR (1) NOT NULL
+);
+
+create TABLE IF NOT EXISTS movie (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR (30) NOT NULL,
+    year INTEGER NOT NULL
+);
+
+create TABLE IF NOT EXISTS director (
+    id INTEGER PRIMARY KEY,
+    fname VARCHAR (30) NOT NULL,
+    lname VARCHAR (30) NOT NULL
+);
+
+create TABLE IF NOT EXISTS casts (
+    pid  integer not null,
+    mid integer not null,
+    role varchar(50) not null,
+    Foreign KEY(pid)
+            REFERENCES actor(id),
+    Foreign KEY(mid)
+            REFERENCES movie(id)
+);
+
+create TABLE IF NOT EXISTS movie_directors (
+    did INTEGER NOT NULL,
+    mid INTEGER NOT NULL,
+        Foreign KEY(mid)
+            REFERENCES movie(id),
+        Foreign KEY(did)
+            REFERENCES director(id)
+);
+
+create TABLE IF NOT EXISTS genre (
+    mid INTEGER,
+    genre VARCHAR (50) NOT NULL
+);
+
+INSERT INTO 
+    actor (id, fname, lname, gender)
+VALUES
+    (1, 'jess', 'fry', 'F'),
+    (2, 'paul', 'carl', 'M'),
+    (3, 'Ciara', 'burn', 'F'),
+    (4, 'Fred', 'ted', 'M'),
+    (5, 'randy', 'gen', 'M');
+
+INSERT INTO 
+    movie (id, name, year)
+VALUES
+    (1, 'that movie', 1990),
+    (2, 'another movie', 2000),
+    (3, 'yet another', 2005),
+    (4, 'a good movie', 2010),
+    (5, 'a bad movie', 2015);
+
+INSERT INTO 
+    director (id, fname, lname)
+VALUES
+    (1, 'terry', 'carl'),
+    (2, 'mark', 'benny'),
+    (3, 'laura', 'henry'),
+    (4, 'Mary', 'john'),
+    (5, 'gerry', 'young');
+
+INSERT INTO 
+    casts (pid, mid, role)
+VALUES
+    (1, 1, 'main'),
+    (2, 1, 'background'),
+    (3, 2, 'main'),
+    (4, 3, 'main'),
+    (5, 4, 'background');
+
+INSERT INTO 
+    movie_directors (did, mid)
+VALUES
+    (1, 1),
+    (2, 1),
+    (3, 2),
+    (4, 3),
+    (5, 4);
+
+INSERT INTO 
+    genre (mid, genre)
+VALUES
+    (1, 'horror'),
+    (2, 'comedy'),
+    (3, 'thriller'),
+    (4, 'horror'),
+    (5, 'romance');
+    
+COMMIT;
+
+
+
+select fname, lname, name 
+from actor 
+join casts on (casts.pid=actor.id)
+join movie on (casts.mid=movie.id);
+
+select fname, lname, count(mid) 
+from director
+join movie_directors on movie_directors.did=director.id
+join movie on movie_directors.mid=movie.id
+group by fname, lname;

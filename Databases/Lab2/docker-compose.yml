@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  my_db:
+    container_name: my_db
+    image: postgres
+    ports:
+      - "54321:5432"
+    restart: unless-stopped
+    env_file:
+      - dbcredentials.env
+    volumes:
+      - /data/volumes/myproject/my_db:/var/lib/postgresql/data/
