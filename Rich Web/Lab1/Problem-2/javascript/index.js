@@ -1,3 +1,6 @@
+// some code refrenced from 
+//https://www.codingnepalweb.com/build-a-notes-app-in-html-css-javascript/
+
 const addBox = document.querySelector(".add-box"),
 addNote = document.querySelector(".popup-box"),
 addText = addNote.querySelector("header p"),
