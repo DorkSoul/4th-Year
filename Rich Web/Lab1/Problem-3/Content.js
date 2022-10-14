@@ -19,4 +19,14 @@ for (let i = 0; i < p.length; i++){
 let a = document.getElementsByTagName("a");
 Array.from(a).forEach((x)=>x.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 
-//Array.from(document.getElementsByTagName("span")).map(x => x.lastChild);
+let spans = Array.from(document.getElementsByTagName("span")).map(x => x.lastChild);
+spans = spans.filter(filterSpans);
+
+function filterSpans(spans){
+    return spans = "text";
+}
+
+console.log(spans);
+for (let i = 0; i < spans.length; i++){
+    spans[i] = "hahahahahahahahahahaha";
+}

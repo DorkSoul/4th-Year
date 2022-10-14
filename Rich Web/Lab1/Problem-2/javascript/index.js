@@ -30,9 +30,9 @@ function showNotes() {
                             <span>${newDesc}</span>
                         </div>
                         <div class="bottom-content">
-                            <span> options </span>
+                            <span></span>
                             <div class="settings">
-                                <i onclick="showMenu(this)" class="fa fa-ellipsis-h"></i>
+                                <i onclick="showMenu(this)" class="options">options</i>
                                 <ul class="menu">
                                     <li onclick="updateNote(${id}, '${note.title}', '${newDesc}')"><i class="fa fa-pencil"></i>Edit</li>
                                     <li onclick="deleteNote(${id})"><i class="fa fa-trash"></i>Delete</li>
