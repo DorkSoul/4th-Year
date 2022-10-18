@@ -1,0 +1,44 @@
+.main-menu{
+width: 800px;
+height: 200px;
+width: auto;
+margin: auto;
+}
+.content{
+  width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  border: solid #0063af 3px;
+  border-radius: 5px;
+  background: #40d6ff;
+}
+form{
+  width: 800px;
+  margin: 0 auto;
+  display:inline-block;
+}
+.add-contact{
+  float: right;
+  text-align: right;
+}
+h1{
+  text-align: center;
+  font-size: 20px;
+}
+.name{
+  width: 25%;
+  float: left;
+  margin-right: 10px;
+}
+.number{
+  width: 25%;
+  float: left;
+  margin-right: 10px;}
+.email{
+  width: 25%;
+  float: left;
+  margin-right: 10px;}

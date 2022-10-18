@@ -30,7 +30,6 @@ function showNotes() {
                             <span>${newDesc}</span>
                         </div>
                         <div class="bottom-content">
-                            <span></span>
                             <div class="settings">
                                 <i onclick="showMenu(this)" class="options">options</i>
                                 <ul class="menu">
