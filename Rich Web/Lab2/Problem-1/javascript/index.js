@@ -21,8 +21,8 @@ function  addcontact() {
         }
         localStorage.setItem("contacts", JSON.stringify(contacts));
         showContatcs();
-        // addNote.classList.remove("show");
     }
+    document.querySelector('content').reset();
 };
 function showContatcs() {
     if(!contacts) return; 
