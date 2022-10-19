@@ -1,18 +1,18 @@
-const nameTag = document.querySelector("name"),
-numberTag = document.querySelector("number"),
-emailTag = document.querySelector("email");
+const nameTag = document.getElementById("contactname").value,
+numberTag = document.getElementById("contactnumber").value,
+emailTag = document.getElementById("contactemail").value,
+nextrow = document.querySelector(".grid-container");
 
 const contacts = JSON.parse(localStorage.getItem("contacts") || "[]");
 let isUpdate = false, updateId;
 
-function addContact(){
-    console.log("it worked");
-    let name = nameTag.value.trim(),
-    number = numberTag.value.trim(),
-    email = emailTag.value.trim();
+function  addcontact() {
+    let nameTag = document.getElementById("contactname").value,
+    numberTag = document.getElementById("contactnumber").value,
+    emailTag = document.getElementById("contactemail").value;
     
-    if(name || number || email) {
-        let contactInfo = {name, number, email}
+    if(nameTag || numberTag || emailTag) {
+        let contactInfo = {nameTag, numberTag, emailTag}
         if(!isUpdate) {
             contacts.push(contactInfo);
         } else {
@@ -20,7 +20,21 @@ function addContact(){
             contacts[updateId] = contactInfo;
         }
         localStorage.setItem("contacts", JSON.stringify(contacts));
-        // showNotes();
+        showContatcs();
         // addNote.classList.remove("show");
     }
 };
+function showContatcs() {
+    if(!contacts) return; 
+
+    document.querySelectorAll(".grid-item").forEach(li => li.remove());
+
+    contacts.forEach((contact) => {
+        let liTag = `<li class="grid-item">${contact.nameTag}</li>
+                    <li class="grid-item">${contact.numberTag}</li>
+                    <li class="grid-item">${contact.emailTag}</li>
+                    `;
+        nextrow.insertAdjacentHTML("beforeend", liTag);
+    });
+}
+showContatcs();

@@ -29,6 +29,10 @@ h1{
   text-align: center;
   font-size: 20px;
 }
+h2{
+  text-align: center;
+  font-size: 15px;
+}
 .name{
   width: 25%;
   float: left;
@@ -37,8 +41,44 @@ h1{
 .number{
   width: 25%;
   float: left;
-  margin-right: 10px;}
+  margin-right: 10px;
+}
 .email{
   width: 25%;
   float: left;
-  margin-right: 10px;}
+  margin-right: 10px;
+}
+.grid-container {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  float: center;
+  background-color: #ffffff;
+  padding: 0px;
+  width: 750px;
+  margin: 0 auto;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: 33.3% 33.3% 33.3%;
+}
+.grid-item {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 0px;
+  font-size: 30px;
+  text-align: center;
+  list-style-type: none;
+}
+.grid-item-header {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 0px;
+  font-size: 30px;
+  text-align: center;
+  list-style-type: none;
+  cursor: pointer;
+}
+li:nth-child(6n+0), li:nth-child(6n-1), li:nth-child(6n-2) {
+  background:  #f2f2f2;
+}
