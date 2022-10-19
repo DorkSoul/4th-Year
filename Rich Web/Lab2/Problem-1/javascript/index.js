@@ -22,7 +22,9 @@ function  addcontact() {
         localStorage.setItem("contacts", JSON.stringify(contacts));
         showContatcs();
     }
-    document.querySelector('content').reset();
+    document.getElementById("contactname").value = "";
+    document.getElementById("contactnumber").value = "";
+    document.getElementById("contactemail").value = "";
 };
 function showContatcs() {
     if(!contacts) return; 
