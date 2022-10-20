@@ -40,3 +40,31 @@ function showContatcs() {
     });
 }
 showContatcs();
+
+function sortname(){
+    console.log("im in");
+    let contacts = JSON.parse(localStorage.getItem('contacts'));
+    let allContacts = contacts.sort((a, b) => a[nameTag].localeCompare(b[nameTag]));
+    // showContatcs();
+    console.log(allContacts);
+};
+
+function sortnumber(){
+    console.log("im in");
+    let contacts = JSON.parse(localStorage.getItem('contacts'));
+    let allContacts = contacts.sort(function(a, b){
+        return b.numberTag - a.numberTag
+      });
+    // showContatcs();
+    console.log(allContacts);
+};
+
+function sortemail(){
+    console.log("im in");
+    let contacts = JSON.parse(localStorage.getItem('contacts'));
+    let allContacts = contacts.sort(function(a, b){
+        return b.emailTag - a.emailTag
+      });
+    // showContatcs();
+    console.log(allContacts);
+};
