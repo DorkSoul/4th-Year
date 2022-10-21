@@ -1,0 +1,3 @@
+This set of exam papers is taken from the Tu Dublin Library Catalogue and therefore does not contain any papers from the previous two years, because of the pandemic.
+Any exam paper that has not been compromised in this set was not available on the mentioned site, whether it be due to availability in that specific year, or the essence of it's recent development.
+Because of the nature of online exam papers, as well as the obtainability of these exam papers, I have decided to leave it up to you to reach out to lecturers to obtain any papers, be it convenience on my part.
