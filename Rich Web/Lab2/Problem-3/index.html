@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Git User Search</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <script async src="./javascript/index.js"></script>
+  </head>
+  <body>
+    <div class="main-menu">
+      <header>
+        <h1>Git User Search</h1>
+      </header>
+      <div class="content">
+        <form action="#" onsubmit="adduser()">
+          <input type="text" placeholder="Username" class="username" id="username" required>
+          <input type="submit" value="Search User" name="searchUser" id="searchUser">
+        </form>
+      </div>
+    </div>
+    <h2>Git User Info</h2>
+    <div class="grids">
+      <div class="grid-container-left">
+        <div class="grid-item-picture" >
+          <img id="user-picture" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png">
+        </div>
+        <div class="grid-item">
+          <div id="name" placeholder="Contact Name">name</div>
+        </div>
+        <div class="grid-item">
+          <div id="user-login">username</div>
+        </div>
+        <div class="grid-item">
+          <div id="email">email</div>
+        </div>
+        <div class="grid-item">
+          <div id="location">location</div>
+        </div>
+        <div class="grid-item">
+          <div id="number-of-gits">number of gits</div>
+        </div>
+      </div>
+      <div class="grid-container-right" id="grid-container-right">
+      </div>
+    </div>
+  </body>
+</html>
