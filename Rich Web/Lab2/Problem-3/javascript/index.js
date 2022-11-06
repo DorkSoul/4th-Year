@@ -40,7 +40,7 @@ async function  adduser() {
 			repoData[key].description != null ? repoDesc = 'repo description: ' + repoData[key].description : repoDesc = 'no repo description'
 
 			document.getElementById("grid-container-right").insertAdjacentHTML("beforeend", 
-			('<div class="grid-item-repos">' + repoName + '<br>' + repoDesc + '</div>'));
+			('<div class="grid-item-repos">' + repoName + '<br><br>' + repoDesc + '</div>'));
 
 			
 		}
