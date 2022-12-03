@@ -31,14 +31,18 @@ body {
 }
 
 .noteGroup{
+  height: 145px;
   display: block;
   padding: 10px;
   margin-right: 20px;
   background-color: lightblue;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
 }
 
 .delete, .createChild{
-  border-width: 2px;
+  border-width: 1px;
   background-color: hotpink;
   border-radius: 10px;
 }
