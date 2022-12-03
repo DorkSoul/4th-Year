@@ -21,16 +21,15 @@ body {
   border-radius: 50px;
 }
 
-
 .note {
-  margin-top: 40px;
+  margin-bottom: 20px;
   min-height: 130px;
   min-width: 230px;
   overflow: auto;
   display: flex;
 }
 
-.noteGroup{
+.noteBackground{
   height: 145px;
   display: block;
   padding: 10px;
