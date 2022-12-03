@@ -1,6 +1,0 @@
-{
-  "type": "module",
-  "dependencies": {
-    "rxjs": "^7.5.7"
-  }
-}
