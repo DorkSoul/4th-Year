@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Timer</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.5.7/rxjs.umd.js"></script>
+    <script async src="./javascript/index.js"></script>
+  </head>
+  <body>
+    <div id="timer">
+      <div id="inputArea">
+          <input id="hoursBox" type="number" min="0" max="99" value="00" pattern="[0-99]" maxlength="2" title="must contain only 2 numbers" required>
+          <input id="minutesBox" type="number" min="0" max="59" value="00" pattern="[0-60]" maxlength="2" title="must contain only 2 numbers" required>
+          <input id="secondsBox" type="number"  min="1" max="59"value="00" pattern="[1-60]" maxlength="2" title="must contain only 2 numbers" required><br>
+      </div>
+      <div id="button">
+          <button id="startButton" type="button">Start</button>
+      </div>
+      <div id="display"><p id="timeDisplay"></p></div>
+  </div>
+  </body>
+</html>
