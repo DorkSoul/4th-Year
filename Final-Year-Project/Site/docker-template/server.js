@@ -53,6 +53,7 @@ app.get("/subscriptions", async (req, res) => {
 })();
 
 
+// format from https://dirask.com/posts/Node-js-PostgreSQL-Insert-query-DZXq2j
 
 const insertSub = async (name, company, website, category, image, description) => {
   try {           // gets connection
