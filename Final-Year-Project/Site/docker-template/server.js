@@ -17,23 +17,6 @@ const client = new Client({
 // Serves a folder called `public` that we will create
 app.use(express.static("public"));
 
-// When a GET request is made to /employees
-// Our app will return an array with a list of all
-// employees including name and title
-// this data is defined in our `database-seed.sql` file
-app.get("/employees", async (req, res) => {
-  const results = await client
-    .query("SELECT * FROM employees")
-    .then((payload) => {
-      return payload.rows;
-    })
-    .catch(() => {
-      throw new Error("Query failed");
-    });
-  res.setHeader("Content-Type", "application/json");
-  res.status(200);
-  res.send(JSON.stringify(results));
-});
 
 app.get("/subscriptions", async (req, res) => {
   const results = await client
@@ -49,6 +32,15 @@ app.get("/subscriptions", async (req, res) => {
   res.send(JSON.stringify(results));
 });
 
+// app.get("/add_subscriptions", async (req, res) => {
+//   try{
+//     query("INSERT INTO subscriptions(name, company, website, category, image, description) VALUES ('Test', 'Test', 'www.test.com', 'test', 'https://photos.google.com/photo/AF1QipPaVHLd5e7TYCQILYlq5aDvWkUpqU4GnfS5PSnY', 'test')");
+//     return true;
+//   }catch(error) {
+//       throw new Error("Query failed");
+//   };
+// });
+
 // Our app must connect to the database before it starts, so
 // we wrap this in an IIFE (Google it) so that we can wait
 // asynchronously for the database connection to establish before listening
@@ -60,13 +52,24 @@ app.get("/subscriptions", async (req, res) => {
   });
 })();
 
-// const myPromise = new Promise((resolve, reject) => {
-//   setTimeout(() => {
-//     resolve("foo");
-//   }, 300);
-//   reject("oops");
-// });
 
-// myPromise.then(() => {
-//   console.log("hello");
-// });
+
+const insertSub = async (name, company, website, category, image, description) => {
+  try {           // gets connection
+      await client.query(
+          `INSERT INTO "subscriptions" ("name", "company", "website", "category", "image", "description")  
+           VALUES ($1, $2, $3, $4, $5, $6)`, [name, company, website, category, image, description]); // sends queries
+      return true;
+  } catch (error) {
+      console.error(error.stack);
+      return false;
+  }
+};
+
+app.get("/add_subscriptions", async () => 
+{insertSub('Test', 'Test', 'www.test.com', 'test', 'https://photos.google.com/photo/AF1QipPaVHLd5e7TYCQILYlq5aDvWkUpqU4GnfS5PSnY', 'test')
+.then(result => {
+  if (result) {
+      console.log('Subscription inserted');
+  }
+})});
