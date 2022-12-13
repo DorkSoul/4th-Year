@@ -402,10 +402,12 @@
 }
 
 .image {
+  display: block;
   border: 1px solid #000;
 }
 
 .image-2 {
+  display: block;
   border: 1px solid #000;
 }
 
