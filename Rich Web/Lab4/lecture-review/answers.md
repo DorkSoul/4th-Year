@@ -65,7 +65,7 @@ f.map(double); // [2, 4, 6]
 some refrences to https://developer.mozilla.org/en-US/docs/Web/CSS/content
 The CSS Box Model is a way of representing the layout of HTML elements on a webpage. It consists of several different components:
 
-Content: This is the element's actual content, such as text or an image.
+Content: This is the element's actual content, such as text or an image. It is the blue area in the diagram.
 
 Padding: This is the space between the content and the border. It is transparent and is used to create space around the content.
 
@@ -118,3 +118,12 @@ You can also set different values for the top, right, bottom, and left sides of 
 
 
 ## Detail how the browser loads and bootstraps a rich web application from an initial URL
+When a user enters a URL into their web browser or clicks on a link to a web page, the browser sends a request to the web server associated with the URL. The web server responds by sending back the HTML document for the web page.
+
+The HTML document contains the content of the web page, as well as instructions for the browser on how to render that content and interact with the user. This includes information about any stylesheets, scripts, and other resources that the browser needs to download and use to render the page correctly.
+
+When the browser receives the HTML document, it starts to parse and render the content of the page. As it encounters links to other resources (such as stylesheets and scripts), it sends additional requests to the server to retrieve these resources.
+
+Once all of the resources have been downloaded and the page has been fully rendered, the browser has "bootstrapped" the web application. At this point, the web application is fully loaded and the user can interact with it.
+
+There are many factors that can affect the performance and loading time of a web application, including the size and complexity of the HTML document and the resources it references, the speed of the network connection, and the performance of the web server and the browser itself.
