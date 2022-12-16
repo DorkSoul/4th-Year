@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Note Taker</title>
+    <link rel="stylesheet" href="index.css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <script async src="./index.js"></script>
+  </head>
+  <body>
+  <!-- Subscription tracking form -->
+<form id="subscription-form">
+  <label for="email">Email:</label><br>
+  <input type="email" id="email" name="email" required><br>
+  <label for="frequency">Frequency:</label><br>
+  <select id="frequency" name="frequency">
+    <option value="weekly">Weekly</option>
+    <option value="monthly">Monthly</option>
+    <option value="quarterly">Quarterly</option>
+  </select><br><br>
+  <input type="submit" value="Subscribe">
+</form> 
+
+<!-- Subscription list -->
+<h2>Current Subscriptions</h2>
+<table id="subscription-list">
+  <tr>
+    <th>Email</th>
+    <th>Frequency</th>
+  </tr>
+</table>
+</body>
+</html>
