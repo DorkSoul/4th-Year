@@ -74,4 +74,47 @@ Border: This is a line around the padding and content. It can be styled using va
 Margin: This is the space outside of the border. It is also transparent and is used to create space between elements.
 
 Here is a diagram illustrating the CSS Box Model:
+
 ![CSS Box Model](https://github.com/DorkSoul/4th-Year/blob/main/Rich%20Web/Lab4/lecture-review/CSS-Box-Model.JPG)
+
+To use the CSS Box Model, you can set values for the different components using CSS properties. For example, you can use the padding property to set the padding for an element, and the margin property to set the margin for an element.
+
+Here is an example of how you can use the CSS Box Model to space DOM elements:
+
+```
+/* Set the padding for the element to 20 pixels */
+.my-element {
+  padding: 20px;
+}
+
+/* Set the margin for the element to 40 pixels */
+.my-element {
+  margin: 40px;
+}
+
+/* Set the border for the element to a solid line with a width of 1 pixel and a color of red */
+.my-element {
+  border: 1px solid red;
+}
+```
+You can also set different values for the top, right, bottom, and left sides of the element using the padding-top, padding-right, padding-bottom, padding-left, margin-top, margin-right, margin-bottom, and margin-left properties.
+```
+/* Set the padding for the top and bottom sides of the element to 20 pixels, and the padding for the left and right sides to 10 pixels */
+.my-element {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Set the margin for the top and bottom sides of the element to 40 pixels, and the margin for the left and right sides to 20 pixels */
+.my-element {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+```
+
+
+## Detail how the browser loads and bootstraps a rich web application from an initial URL
