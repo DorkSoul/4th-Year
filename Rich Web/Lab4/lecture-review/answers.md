@@ -74,5 +74,4 @@ Border: This is a line around the padding and content. It can be styled using va
 Margin: This is the space outside of the border. It is also transparent and is used to create space between elements.
 
 Here is a diagram illustrating the CSS Box Model:
-<img src="CSS-Box-Model.png" alt="CSS-Box-Model" style="height: 100px; width:100px;"/>
-
+![CSS Box Model](https://github.com/DorkSoul/4th-Year/blob/main/Rich%20Web/Lab4/lecture-review/CSS-Box-Model.JPG)
