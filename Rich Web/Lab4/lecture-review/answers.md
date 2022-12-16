@@ -60,3 +60,19 @@ f.map(double); // [2, 4, 6]
 | Callbacks | Callbacks are a simple and straightforward way to handle async operations in JavaScript. They are easy to understand and implement, even for developers with little experience with async programming                                         | Callbacks can lead to "callback hell," where code becomes difficult to read and maintain due to the nested nature of callbacks. This can be especially problematic when dealing with multiple async operations that need to be sequenced or parallelized                                       |
 | Promises  | Promises provide a cleaner and more readable syntax for handling async operations, compared to callbacks. They allow you to chain async operations together in a more readable and maintainable way, using .then() and .catch() methods.      | Promises can be somewhat more difficult to understand and work with, especially for developers who are new to async programming. It can take some time to get used to the Promise syntax and understand how to chain async operations together using .then() and .catch().                     |
 | Streams   | Streams allow you to process data incrementally, rather than having to load the entire dataset into memory at once. This can be useful when working with large datasets, or when the data is coming from a source that is slow or unreliable. | Streams can be more complex to work with than other async programming techniques, such as callbacks or promises. They involve a different programming paradigm, and require a deeper understanding of how to read and write data from streams, handle errors, and manipulate the flow of data. |
+
+## With the aid of a diagram and example code, describe the Cascading Style Sheets (CSS) Box Model and show how it can be used to space DOM elements
+some refrences to https://developer.mozilla.org/en-US/docs/Web/CSS/content
+The CSS Box Model is a way of representing the layout of HTML elements on a webpage. It consists of several different components:
+
+Content: This is the element's actual content, such as text or an image.
+
+Padding: This is the space between the content and the border. It is transparent and is used to create space around the content.
+
+Border: This is a line around the padding and content. It can be styled using various CSS properties, such as color, width, and style (e.g. solid, dotted, etc.).
+
+Margin: This is the space outside of the border. It is also transparent and is used to create space between elements.
+
+Here is a diagram illustrating the CSS Box Model:
+<img src="CSS-Box-Model.png" alt="CSS-Box-Model" style="height: 100px; width:100px;"/>
+
