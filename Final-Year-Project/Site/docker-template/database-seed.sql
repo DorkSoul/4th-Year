@@ -54,6 +54,10 @@ CREATE TABLE "user_subs" (
     "cancelled" Boolean
 );
 
+CREATE TABLE "user_sessions" (
+    "id" varchar PRIMARY KEY
+);
+
 ALTER TABLE "user_login" ADD FOREIGN KEY ("id") REFERENCES "users" ("id");
 
 ALTER TABLE "user_subs" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");

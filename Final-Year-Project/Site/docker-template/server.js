@@ -56,40 +56,59 @@ app.get("/subscriptions", async (req, res) => {
 })();
 
 
-// app.post('/login', function(req, res) {
-//   var username = req.body.username;
-//   var password = req.body.password;
-
-//   // check if the username and password are valid
-//   if (username === 'test' && password === 'test') {
-//     // set session ID and send success response
-//     var sessionId = req.sessionID;
-//     res.json({ success: true, sessionId: sessionId });
-//   } else {
-//     // send error response
-//     res.status(401).json({ error: 'Invalid username or password' });
-//   }
-// });
-
-
 
 
 
 
 // Handle the login form submission
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  // Validate the user's credentials
-  if (username === 'test' && password === 'test') {
-    // If the credentials are valid, set a cookie to indicate that the user is authenticated
-    var sessionId = req.sessionID;
-    res.json({ success: true, sessionId: sessionId });
-      } else {
-        // send error response
-        res.status(401).json({ error: 'Invalid username or password' });
-      }
+  try {
+    // Query the user_login table for a user with the given username and password
+    const result = await client.query('SELECT id FROM user_login WHERE username = $1 AND password = $2', [username, password]);
+
+    // Check if a user was found
+    if (result.rows.length > 0) {
+      const sessionId = req.sessionID;
+
+      // Insert the session ID into the user_sessions table
+      await client.query('INSERT INTO user_sessions (id) VALUES ($1)', [sessionId]);
+
+      res.json({ success: true, sessionId: sessionId });
+    } else {
+      // Send an error response if no user was found
+      res.status(401).json({ error: 'Invalid username or password' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred' });
+  }
 });
+
+app.post('/user_session', async (req, res) => {
+  const { sessionId } = req.body;
+  console.log(sessionId);
+
+  try {
+    // Query the user_sessions table for a session with the given ID
+    const result = await client.query('SELECT id FROM user_sessions WHERE id = $1', [sessionId]);
+
+    // Check if a session was found
+    if (result.rows.length > 0) {
+      res.json({ success: true });
+    } else {
+      // Send an error response if no session was found
+      res.status(401).json({ error: 'Invalid session' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+
+
 
 
 

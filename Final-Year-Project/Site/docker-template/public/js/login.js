@@ -22,6 +22,8 @@ loginForm.addEventListener('submit', (event) => {
   .then(data => {
     // Store the session ID in a cookie or local storage
     localStorage.setItem('sessionId', data.sessionId);
+    localStorage.setItem('username', username);
+    localStorage.setItem('password', password);
     window.location.href = '/index.html'; // Redirect to the account page
   })
   .catch(error => {
