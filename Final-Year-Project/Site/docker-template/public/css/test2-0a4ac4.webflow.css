@@ -261,6 +261,10 @@
   border: 1px solid black;
 }
 
+.sub_info > * {
+  border: 1px solid black;
+  }
+
 .text-block {
   text-align: center;
 }
