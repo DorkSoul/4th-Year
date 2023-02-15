@@ -2,8 +2,11 @@
 // Import the postgres client
 const { Client } = require("pg");
 const express = require("express");
+const bodyParser = require('body-parser');
 const app = express();
 const port = 8070;
+app.use(bodyParser.urlencoded({ extended: false }));
+
 
 // Connect to our postgres database
 const client = new Client({
@@ -14,7 +17,6 @@ const client = new Client({
 
 
 app.use(express.static("public"));
-
 
 app.get("/subscriptions", async (req, res) => {
   const results = await client
@@ -31,13 +33,30 @@ app.get("/subscriptions", async (req, res) => {
 });
 
 
-(async () => {
+  (async () => {
   await client.connect();
 
   app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`App listening at http://localhost:${port}`);
   });
 })();
+
+// Route to Homepage
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+// Route to Login Page
+app.get('/login', (req, res) => {
+  res.sendFile(__dirname + '/login.html');
+});
+
+app.post('/login', (req, res) => {
+  // Insert Login Code Here
+  let username = req.body.user_username;
+  let password = req.body.user_password;
+  res.send(`Username: ${username} Password: ${password}`);
+});
 
 
 // format from https://dirask.com/posts/Node-js-PostgreSQL-Insert-query-DZXq2j

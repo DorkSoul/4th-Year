@@ -5,5 +5,4 @@ fetch("/subscriptions")
     console.log(subscription);
   });
 });
-
   

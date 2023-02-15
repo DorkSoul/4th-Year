@@ -54,7 +54,16 @@
     </div>
     <div class="login_details">
       <div class="login_form w-form">
-        <form id="wf-form-Subscription-Form" name="wf-form-Subscription-Form" data-name="Subscription Form" method="get" class="form_login"><label for="user_username-2" class="sub_data_text">Username</label><input type="text" class="sub_data_field w-input" maxlength="256" name="user_username" data-name="user_username" placeholder="John Smith" id="user_username-2" required=""><label for="user_password" class="sub_data_text">Password</label><input type="password" class="sub_data_field w-input" maxlength="256" name="user_password" data-name="user_password" placeholder="********" id="user_password" required=""><input type="submit" value="Login" data-wait="Please wait..." id="update_account" class="submit-button w-button">
+        <form id="wf-form-Subscription-Form" name="wf-form-Subscription-Form" action="http://localhost:8070/login" data-name="Subscription Form" method="POST" class="form_login">
+
+          <label for="user_username-2" class="sub_data_text">Username</label>
+          <input type="text" class="sub_data_field w-input" maxlength="256" name="user_username" data-name="user_username" placeholder="Username" id="user_username-2" required="">
+          
+          <label for="user_password" class="sub_data_text">Password</label>
+          <input type="password" class="sub_data_field w-input" maxlength="256" name="user_password" data-name="user_password" placeholder="********" id="user_password" required="">
+          
+          <input type="submit" value="Login" data-wait="Please wait..." id="update_account" class="submit-button w-button">
+
           <a id="w-node-_441b37f7-fbbd-167b-058b-56e22411f5ee-351324ac" href="create-account.html" class="register_button w-button">Register</a>
         </form>
         <div class="w-form-done">
