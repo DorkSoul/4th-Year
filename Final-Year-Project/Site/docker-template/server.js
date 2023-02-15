@@ -2,10 +2,24 @@
 // Import the postgres client
 const { Client } = require("pg");
 const express = require("express");
-const bodyParser = require('body-parser');
+const session = require('express-session'); // express-sessions
+const { v4: uuidv4 } = require('uuid'); // uuid, To call: uuidv4();
+// const bodyParser = require('body-parser');
 const app = express();
 const port = 8070;
-app.use(bodyParser.urlencoded({ extended: false }));
+
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(session({
+  genid: function (req) {
+    return uuidv4();
+  },
+  secret: '=fgHV*U@FL`N]]~/zFgyCch.pBHuEU',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 60 * 60 * 1000 }, // 1 hour cookie life
+}));
 
 
 // Connect to our postgres database
@@ -41,22 +55,46 @@ app.get("/subscriptions", async (req, res) => {
   });
 })();
 
-// Route to Homepage
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
 
-// Route to Login Page
-app.get('/login', (req, res) => {
-  res.sendFile(__dirname + '/login.html');
-});
+// app.post('/login', function(req, res) {
+//   var username = req.body.username;
+//   var password = req.body.password;
 
+//   // check if the username and password are valid
+//   if (username === 'test' && password === 'test') {
+//     // set session ID and send success response
+//     var sessionId = req.sessionID;
+//     res.json({ success: true, sessionId: sessionId });
+//   } else {
+//     // send error response
+//     res.status(401).json({ error: 'Invalid username or password' });
+//   }
+// });
+
+
+
+
+
+
+// Handle the login form submission
 app.post('/login', (req, res) => {
-  // Insert Login Code Here
-  let username = req.body.user_username;
-  let password = req.body.user_password;
-  res.send(`Username: ${username} Password: ${password}`);
+  const { username, password } = req.body;
+
+  // Validate the user's credentials
+  if (username === 'test' && password === 'test') {
+    // If the credentials are valid, set a cookie to indicate that the user is authenticated
+    var sessionId = req.sessionID;
+    res.json({ success: true, sessionId: sessionId });
+      } else {
+        // send error response
+        res.status(401).json({ error: 'Invalid username or password' });
+      }
 });
+
+
+
+
+
 
 
 // format from https://dirask.com/posts/Node-js-PostgreSQL-Insert-query-DZXq2j
