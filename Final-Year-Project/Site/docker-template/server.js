@@ -29,25 +29,9 @@ const client = new Client({
   host: "postgres",
 });
 
-
 app.use(express.static("public"));
 
-app.get("/subscriptions", async (req, res) => {
-  const results = await client
-    .query("SELECT * FROM subscriptions")
-    .then((payload) => {
-      return payload.rows;
-    })
-    .catch(() => {
-      throw new Error("Query failed");
-    });
-  res.setHeader("Content-Type", "application/json");
-  res.status(200);
-  res.send(JSON.stringify(results));
-});
-
-
-  (async () => {
+(async () => {
   await client.connect();
 
   app.listen(port, () => {
@@ -57,6 +41,32 @@ app.get("/subscriptions", async (req, res) => {
 
 
 
+
+app.post("/subscriptions", async (req, res) => {
+  const { username, password } = req.body;
+
+  const query = `
+    SELECT s.name, s.category, s.image, us.cost, us.start_date, us.recurring_length, us.sort_group 
+    FROM user_login ul 
+    INNER JOIN users u ON ul.id = u.id 
+    INNER JOIN user_subs us ON u.id = us.user_id 
+    INNER JOIN subscriptions s ON us.sub_id = s.id 
+    WHERE ul.username = $1 AND ul.password = $2;
+  `;
+
+  const params = [username, password];
+
+  try {
+    const results = await client.query(query, params);
+    console.log(results);
+    res.setHeader("Content-Type", "application/json");
+    res.status(200);
+    res.send(JSON.stringify(results.rows));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Query failed");
+  }
+});
 
 
 
@@ -88,8 +98,6 @@ app.post('/login', async (req, res) => {
 
 app.post('/user_session', async (req, res) => {
   const { sessionId } = req.body;
-  console.log(sessionId);
-
   try {
     // Query the user_sessions table for a session with the given ID
     const result = await client.query('SELECT id FROM user_sessions WHERE id = $1', [sessionId]);

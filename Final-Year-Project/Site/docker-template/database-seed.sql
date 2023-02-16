@@ -68,11 +68,11 @@ ALTER TABLE "user_subs" ADD FOREIGN KEY ("alert_id") REFERENCES "alarms" ("id");
 
 
 INSERT INTO subscriptions(name, company, website, category, image, description) VALUES
-    ('Netflix', 'Netflix', 'www.netflix.com', 'tv', 'https://photos.google.com/photo/AF1QipPaVHLd5e7TYCQILYlq5aDvWkUpqU4GnfS5PSnY', 'netflix'),
-    ('Spotify', 'Spotify', 'www.Spotify.com', 'music', 'https://photos.google.com/photo/AF1QipMcP6tnPcgIsE-rOVfNwZtgkWb2Pb14xpV_jSl3', 'spotify'),
-    ('Prime', 'Prime', 'www.amazon.com', 'tv', 'https://photos.google.com/photo/AF1QipPaVHLd5e7TYCQILYlq5aDvWkUpqU4GnfS5PSnY', 'prime'),
-    ('Audable', 'Audable', 'www.audable.com', 'books', 'https://photos.google.com/photo/AF1QipOpXYg1r1v_9nHamK1JGKf21Ff7OZTTWD135d9W', 'audable'),
-    ('Humble Bundle', 'Humble Bundle', 'www.HumbleBundle.com', 'games', 'https://photos.google.com/photo/AF1QipPhbDNih5NHBp6U9eJ7bpQ2fU1UTn3-68Y91KC4', 'humble bundle');
+    ('Netflix', 'Netflix', 'www.netflix.com', 'tv', 'https://i.imgur.com/ubhckib.png', 'netflix'),
+    ('Spotify', 'Spotify', 'www.Spotify.com', 'music', 'https://i.imgur.com/VD6WGhp.png', 'spotify'),
+    ('Prime', 'Prime', 'www.amazon.com', 'tv', 'https://i.imgur.com/MaJrIIp.png', 'prime'),
+    ('Audable', 'Audable', 'www.audable.com', 'books', 'https://i.imgur.com/UJLDMGH.png', 'audable'),
+    ('Humble Bundle', 'Humble Bundle', 'www.HumbleBundle.com', 'games', 'https://i.imgur.com/OhHnvoR.png', 'humble bundle');
 
 INSERT INTO users (first_name, last_name, email, phone_number, account_number, currency, time_zone, age, gender, address, country) VALUES
     ('Luke', 'Hallinan', 'test@test.com', '0125456321', '12345', 'euro', '0', '27', 'male', '21 normal street', 'ireland');
