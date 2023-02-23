@@ -18,7 +18,7 @@
     <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar-no-shadow-container w-nav">
       <div class="container-regular">
         <div class="navbar-wrapper">
-          <a href="index.html" class="navbar-brand w-nav-brand"><img src="https://uploads-ssl.webflow.com/62434fa732124a0fb112aab4/62434fa732124a332512aaee_placeholder-1.svg" loading="lazy" alt=""></a>
+          <a href="index.html" aria-current="page" class="navbar-brand w-nav-brand"><img src="https://uploads-ssl.webflow.com/62434fa732124a0fb112aab4/62434fa732124a332512aaee_placeholder-1.svg" loading="lazy" alt=""></a>
           <nav role="navigation" class="nav-menu-wrapper w-nav-menu">
             <ul role="list" class="nav-menu w-list-unstyled">
               <li>
@@ -50,31 +50,40 @@
   </div>
   <main id="Main" class="main-section w-container">
     <div class="sub_header">
-      <h2 class="heading-2">Subscription Information</h2>
+      <!-- <h2 class="heading-2">Subscription Information</h2> -->
     </div>
     <div class="div-block-11">
-      <div class="div-block-10"><img src="images/Netflix-logo-red-black.png" loading="lazy" sizes="(max-width: 767px) 50vw, (max-width: 991px) 47vw, 470px" srcset="images/Netflix-logo-red-black-p-500.png 500w, images/Netflix-logo-red-black-p-800.png 800w, images/Netflix-logo-red-black-p-1080.png 1080w, images/Netflix-logo-red-black.png 1440w" alt=""></div>
+      <div class="div-block-10"><img id="subscription-image" src="" loading="lazy" sizes="(max-width: 767px) 50vw, (max-width: 991px) 47vw, 470px" alt=""></div>
       <div class="div-block-12">
         <div class="sub_info">
-          <div id="sub_cost" class="sub_data w-node-_448aaf59-332a-d163-a3e5-cd39e9eb4c37-1bfb9fee">
+          <div class="sub_data">
+            <div class="text-block">Name</div>
+            <div id="subscription-name" class="text-block"></div>
+          </div>
+          <div class="sub_data">
+            <div class="text-block">Category</div>
+            <div id="subscription-category" class="text-block"></div>
+          </div>
+          <div class="sub_data">
             <div class="text-block">Cost</div>
-            <div class="text-block">€15</div>
+            <div id="subscription-cost" class="text-block"></div>
           </div>
-          <div id="sub_renew" class="sub_data w-node-_448aaf59-332a-d163-a3e5-cd39e9eb4c3c-1bfb9fee">
+          <div class="sub_data">
             <div class="text-block-2">Renewal Date</div>
-            <div class="text-block-2">22/5/23</div>
+            <div id="subscription-renewal-date" class="text-block-2"></div>
           </div>
-          <div id="sub_start" class="sub_data w-node-_448aaf59-332a-d163-a3e5-cd39e9eb4c41-1bfb9fee">
+          <div class="sub_data">
             <div class="text-block-3">Start Date</div>
-            <div class="text-block-3">22/3/23</div>
+            <div id="subscription-start-date" class="text-block-3"></div>
           </div>
-          <div id="sub_total" class="sub_data w-node-_448aaf59-332a-d163-a3e5-cd39e9eb4c46-1bfb9fee">
+          <div class="sub_data">
             <div class="text-block-4">Total Payed</div>
-            <div class="text-block-4">€30</div>
+            <div id="subscription-total-paid" class="text-block-4"></div>
           </div>
         </div>
       </div>
     </div>
   </main>
+  <script src="js/sub-info.js" type="text/javascript"></script>
 </body>
 </html>

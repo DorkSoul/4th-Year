@@ -34,10 +34,9 @@ fetch("/subscriptions", {
     gridContainer.innerHTML = '';
 
     data.forEach((subscription) => {
-      const{name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
+      const{id, name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
 
       const subMain = document.createElement('a');
-      subMain.setAttribute('href', 'subscription-info.html');
       subMain.classList.add('sub_main', 'w-inline-block');
 
       const gridLogo = document.createElement('div');
@@ -70,13 +69,15 @@ fetch("/subscriptions", {
       subRenew.classList.add('sub_data');
       const renewLabel = document.createElement('div');
       renewLabel.classList.add('text-block-2');
-      renewLabel.textContent = 'start_date';
+      renewLabel.textContent = 'Start Date';
       subRenew.appendChild(renewLabel);
       const renewValue = document.createElement('div');
       renewValue.classList.add('text-block-2');
-      renewValue.textContent = start_date;
+      const date = new Date(start_date);
+      const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      renewValue.textContent = formattedDate;
       subRenew.appendChild(renewValue);
-      subInfo.appendChild(subRenew);
+      subInfo.appendChild(subRenew);      
 
       const subStart = document.createElement('div');
       subStart.classList.add('sub_data');
@@ -104,6 +105,10 @@ fetch("/subscriptions", {
 
       subMain.appendChild(subInfo);
       gridContainer.appendChild(subMain);
+
+      subMain.addEventListener('click', () => {
+        window.location.href = `/subscription-info.html?id=${subscription.id}`;
+      });
     });
   })
   .catch((error) => {

@@ -46,7 +46,7 @@ app.post("/subscriptions", async (req, res) => {
   const { username, password } = req.body;
 
   const query = `
-    SELECT s.name, s.category, s.image, us.cost, us.start_date, us.recurring_length, us.sort_group 
+    SELECT s.id, s.name, s.category, s.image, us.cost, us.start_date, us.recurring_length, us.sort_group 
     FROM user_login ul 
     INNER JOIN users u ON ul.id = u.id 
     INNER JOIN user_subs us ON u.id = us.user_id 
@@ -58,7 +58,6 @@ app.post("/subscriptions", async (req, res) => {
 
   try {
     const results = await client.query(query, params);
-    console.log(results);
     res.setHeader("Content-Type", "application/json");
     res.status(200);
     res.send(JSON.stringify(results.rows));
@@ -67,6 +66,32 @@ app.post("/subscriptions", async (req, res) => {
     res.status(500).send("Query failed");
   }
 });
+
+app.post("/subscriptions/:id", async (req, res) => {
+  const { id } = req.params;
+  const { username } = req.body;
+
+  const query = `
+    SELECT s.name, s.category, s.image, us.cost, us.start_date, us.recurring_length, us.sort_group 
+    FROM user_subs us
+    INNER JOIN subscriptions s ON us.sub_id = s.id 
+    INNER JOIN user_login ul ON ul.id = us.user_id 
+    WHERE s.id = $1 AND ul.username = $2;
+  `;
+
+  const params = [id, username];
+
+  try {
+    const results = await client.query(query, params);
+    res.setHeader("Content-Type", "application/json");
+    res.status(200);
+    res.send(JSON.stringify(results.rows));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Query failed" });
+  }
+});
+
 
 
 
