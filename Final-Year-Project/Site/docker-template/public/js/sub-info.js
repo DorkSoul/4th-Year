@@ -62,8 +62,19 @@ fetch(`/subscriptions/${subId}`, {
     const subscriptionRecurringLength = document.querySelector('#subscription-renewal-date');
     subscriptionRecurringLength.textContent = recurring_length;
 
-    // const subscriptionSortGroup = document.querySelector('#subscription-total-paid');
-    // subscriptionSortGroup.textContent = sort_group;
+    const subscriptionSortGroup = document.querySelector('#subscription-total-paid');
+    const currentDate = new Date();
+    const daysInMonth = 30;
+    const daysInWeek = 7;
+    const timeDiff = Math.abs(currentDate.getTime() - startDateObj.getTime());
+    const diffDays = Math.floor(timeDiff / (1000 * 3600 * 24)); 
+    let totalPaid = 0;
+    if (recurring_length === 'monthly') {
+      totalPaid = Math.floor(diffDays/daysInMonth)*cost;
+    } else if (recurring_length === 'weekly') {
+      totalPaid = Math.floor(diffDays/daysInWeek)*cost;
+    }
+    subscriptionSortGroup.textContent = `€${totalPaid}`;
 
     // const subscriptionDescription = document.querySelector('.subscription_description');
     // subscriptionDescription.textContent = description;
@@ -72,3 +83,5 @@ fetch(`/subscriptions/${subId}`, {
     console.error(error);
     alert(error.message);
   });
+
+  
