@@ -33,7 +33,7 @@ app.use(express.static("public"));
 
 (async () => {
   await client.connect();
-
+  await generateUserData(); // call the generateUserData function on initial startup
   app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
   });
@@ -173,3 +173,118 @@ app.get("/add_subscriptions", async (req, res) =>
       res.send(JSON.stringify(result));
   }
 })});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//generate data for database
+const generateUserData = async () => {
+  const users = Array.from({ length: 100 }, (_, i) => {
+    const phoneNumber = `086${Math.floor(Math.random() * 10000000).toString().padStart(7, '0')}`;
+    const currency = ['euro', 'dollar', 'pound'][Math.floor(Math.random() * 3)];
+    const timeZone = Math.floor(Math.random() * 24) - 12;
+    const age = Math.floor(Math.random() * 80) + 18;
+    const gender = ['male', 'female'][Math.floor(Math.random() * 2)];
+    const country = ['Ireland', 'USA', 'UK'][Math.floor(Math.random() * 3)];
+    const address = `${Math.floor(Math.random() * 100)} ${['Main', 'High', 'Park', 'Maple'][Math.floor(Math.random() * 4)]} St`;
+    return [
+      `user${i + 1}`,
+      `last${i + 1}`,
+      `user${i + 1}@example.com`,
+      phoneNumber,
+      Math.floor(Math.random() * 100000),
+      currency,
+      timeZone,
+      age,
+      gender,
+      address,
+      country,
+    ];
+  });
+
+  const logins = Array.from({ length: 100 }, (_, i) => {
+    return [
+      i + 1,
+      `user${i + 1}`,
+      'password',
+    ];
+  });
+
+  const subs = [];
+
+  for (let i = 1; i <= 100; i++) {
+    const subCount = Math.floor(Math.random() * 9) + 1;
+    for (let j = 0; j < subCount; j++) {
+      const subId = Math.floor(Math.random() * 40) + 1;
+      const cost = Math.floor(Math.random() * 30) + 1;
+      const startDate = `2021-${Math.floor(Math.random() * 12) + 1}-${Math.floor(Math.random() * 28) + 1}`;
+      // const recurringLength = ['monthly', 'yearly'][Math.floor(Math.random() * 2)];
+      const recurringLength = ['monthly', 'monthly'][Math.floor(Math.random() * 2)];
+      const alertId = 1;
+      const sortGroup = [
+        ...Array(10).fill('tv and movies'),
+        ...Array(10).fill('music'),
+        ...Array(10).fill('games'),
+        ...Array(5).fill('books'),
+        ...Array(5).fill('food'),
+      ][subId - 1];
+      const userNotes = `This is a note for user ${i + 1} subscription ${j + 1}.`;
+      // const cancelled = [true, false][Math.floor(Math.random() * 2)];
+      const cancelled = [false, false][Math.floor(Math.random() * 2)];
+      subs.push([i, subId, cost, startDate, recurringLength, alertId, sortGroup, userNotes, cancelled]);
+    }
+  }
+  for (let i = 0; i < users.length; i++) {
+    const [firstName, lastName, email, phoneNumber, accountNumber, currency, timeZone, age, gender, address, country] = users[i];
+    try {
+      await client.query(
+        `INSERT INTO "users" ("first_name", "last_name", "email", "phone_number", "account_number", "currency", "time_zone", "age", "gender", "address", "country")
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+        [firstName, lastName, email, phoneNumber, accountNumber, currency, timeZone, age, gender, address, country]
+      );
+      
+      const [id, username, password] = logins[i];
+      await client.query(
+        `INSERT INTO "user_login" ("id", "username", "password")
+         VALUES ($1, $2, $3)`,
+        [id, username, password]
+      );
+  
+      for (let j = 0; j < subs.length; j++) {
+        const [userId, subId, cost, startDate, recurringLength, alertId, sortGroup, userNotes, cancelled] = subs[j];
+        if (userId === i + 1) {
+          await client.query(
+            `INSERT INTO "user_subs" ("user_id", "sub_id", "cost", "start_date", "recurring_length", "alert_id", "sort_group", "user_notes", "cancelled")
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+            [userId, subId, cost, startDate, recurringLength, alertId, sortGroup, userNotes, cancelled]
+          );
+        }
+      }
+    } catch (error) {
+      console.error(error.stack);
+    }
+  }  
+};
