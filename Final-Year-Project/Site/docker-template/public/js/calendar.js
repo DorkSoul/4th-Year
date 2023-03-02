@@ -29,6 +29,52 @@ if (!sessionId) {
   });
 }
 
+
+
+fetch("/subscriptions", {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ username, password })
+})
+  .then((response) => response.json())
+  .then((data) => {
+    // Get monthly subscription costs and next payment dates
+    let monthlyCosts = Array(12).fill(0);
+    let nextPaymentDates = {};
+    let nextPaymentNames = {};
+    data.forEach(subscription => {
+        const{id, name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
+        const startDate = new Date(start_date);
+        const startMonth = startDate.getMonth();
+        let nextPaymentDate = new Date(start_date);
+
+        if (recurring_length === 'weekly') {
+          while (nextPaymentDate < new Date()) {
+            nextPaymentDate.setDate(nextPaymentDate.getDate() + 7);
+          }
+        } else if (recurring_length === 'monthly') {
+          while (nextPaymentDate < new Date()) {
+            nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+          }
+        }
+
+        nextPaymentDates[id] = nextPaymentDate;
+        nextPaymentNames[id] = name;
+
+        const nextPaymentMonth = nextPaymentDate.getMonth();
+        const totalCost = Math.floor((nextPaymentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)) * cost;
+        monthlyCosts[nextPaymentMonth] += totalCost;
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+    alert(error.message);
+  });
+
+
+
+  
+
 let currentDate = new Date();
 
 // Set initial month and year in header
@@ -86,46 +132,3 @@ function renderCalendar(date) {
     calendarGrid.appendChild(calendarRow);
   }
 }
-
-
-
-
-fetch("/subscriptions", {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ username, password })
-})
-  .then((response) => response.json())
-  .then((data) => {
-    // Get monthly subscription costs and next payment dates
-    let monthlyCosts = Array(12).fill(0);
-    let nextPaymentDates = {};
-    let nextPaymentNames = {};
-    data.forEach(subscription => {
-        const{id, name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
-        const startDate = new Date(start_date);
-        const startMonth = startDate.getMonth();
-        let nextPaymentDate = new Date(start_date);
-
-        if (recurring_length === 'weekly') {
-          while (nextPaymentDate < new Date()) {
-            nextPaymentDate.setDate(nextPaymentDate.getDate() + 7);
-          }
-        } else if (recurring_length === 'monthly') {
-          while (nextPaymentDate < new Date()) {
-            nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
-          }
-        }
-
-        nextPaymentDates[id] = nextPaymentDate;
-        nextPaymentNames[id] = name;
-
-        const nextPaymentMonth = nextPaymentDate.getMonth();
-        const totalCost = Math.floor((nextPaymentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)) * cost;
-        monthlyCosts[nextPaymentMonth] += totalCost;
-    });
-  })
-  .catch((error) => {
-    console.error(error);
-    alert(error.message);
-  });
