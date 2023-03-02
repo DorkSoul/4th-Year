@@ -1483,6 +1483,22 @@
   justify-content: center;
 }
 
+.subscription {
+  display: inline-block;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 0px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  margin: 2px;
+  line-height: normal;
+  height: auto;
+}
+
+
+
+
+
 
 
 

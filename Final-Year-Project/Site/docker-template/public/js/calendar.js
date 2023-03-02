@@ -7,6 +7,9 @@ const prevMonthBtn = document.getElementById("prev-month");
 const nextMonthBtn = document.getElementById("next-month");
 const calendarGrid = document.querySelector(".calendar-grid");
 
+let nextPaymentDates = {};
+let nextPaymentNames = {};
+
 if (!sessionId) {
   // Redirect to login page
   window.location.href = "/login.html";
@@ -18,30 +21,19 @@ if (!sessionId) {
   })
   .then(response => {
     if (response.ok) {
-      return
+      return fetch("/subscriptions", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
     } else {
-      window.location.href = '/login.html';
+      throw new Error('User session not valid');
     }
   })
-  .catch(error => {
-    console.error(error);
-    alert(error.message);
-  });
-}
-
-
-
-fetch("/subscriptions", {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ username, password })
-})
   .then((response) => response.json())
   .then((data) => {
     // Get monthly subscription costs and next payment dates
     let monthlyCosts = Array(12).fill(0);
-    let nextPaymentDates = {};
-    let nextPaymentNames = {};
     data.forEach(subscription => {
         const{id, name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
         const startDate = new Date(start_date);
@@ -62,18 +54,62 @@ fetch("/subscriptions", {
         nextPaymentNames[id] = name;
 
         const nextPaymentMonth = nextPaymentDate.getMonth();
-        const totalCost = Math.floor((nextPaymentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)) * cost;
-        monthlyCosts[nextPaymentMonth] += totalCost;
     });
+
+    renderCalendar(currentDate);
   })
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
     alert(error.message);
+    window.location.href = '/login.html';
   });
+}
 
 
 
-  
+
+
+// fetch("/subscriptions", {
+//   method: 'POST',
+//   headers: { 'Content-Type': 'application/json' },
+//   body: JSON.stringify({ username, password })
+// })
+//   .then((response) => response.json())
+//   .then((data) => {
+//     // Get monthly subscription costs and next payment dates
+//     let monthlyCosts = Array(12).fill(0);
+//     let nextPaymentDates = {};
+//     let nextPaymentNames = {};
+//     data.forEach(subscription => {
+//         const{id, name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
+//         const startDate = new Date(start_date);
+//         const startMonth = startDate.getMonth();
+//         let nextPaymentDate = new Date(start_date);
+
+//         if (recurring_length === 'weekly') {
+//           while (nextPaymentDate < new Date()) {
+//             nextPaymentDate.setDate(nextPaymentDate.getDate() + 7);
+//           }
+//         } else if (recurring_length === 'monthly') {
+//           while (nextPaymentDate < new Date()) {
+//             nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+//           }
+//         }
+
+//         nextPaymentDates[id] = nextPaymentDate;
+//         nextPaymentNames[id] = name;
+
+//         const nextPaymentMonth = nextPaymentDate.getMonth();
+//     });
+//   })
+//   .catch((error) => {
+//     console.error(error);
+//     alert(error.message);
+//   });
+
+
+
+
 
 let currentDate = new Date();
 
@@ -124,6 +160,19 @@ function renderCalendar(date) {
       } else {
         calendarDay.innerText = dayNumber;
         dayNumber++;
+
+        const nextPaymentDate = nextPaymentDates[dayNumber - 1];
+        if (nextPaymentDate) {
+          const subscriptionId = Object.keys(nextPaymentDates).find(id => nextPaymentDates[id].getTime() === nextPaymentDate.getTime());
+          const subscriptionName = nextPaymentNames[subscriptionId];
+          const subscriptionColor = getSubscriptionColor(subscriptionId);
+          
+          const subscriptionElement = document.createElement("div");
+          subscriptionElement.classList.add("subscription");
+          subscriptionElement.style.backgroundColor = subscriptionColor;
+          subscriptionElement.innerText = subscriptionName;
+          calendarDay.appendChild(subscriptionElement);
+        }
       }
 
       calendarRow.appendChild(calendarDay);
@@ -132,3 +181,53 @@ function renderCalendar(date) {
     calendarGrid.appendChild(calendarRow);
   }
 }
+
+const subscriptionColors = [
+  "#FF0000", // Red
+  "#FF8000", // Orange
+  "#FFFF00", // Yellow
+  "#80FF00", // Lime
+  "#00FF00", // Green
+  "#00FF80", // Spring Green
+  "#00FFFF", // Cyan
+  "#0080FF", // Sky Blue
+  "#0000FF", // Blue
+  "#8000FF", // Purple
+  "#FF00FF", // Magenta
+  "#FF0080", // Pink
+  "#C00000", // Dark Red
+  "#C08000", // Dark Orange
+  "#C0C000", // Olive
+  "#60C000", // Dark Lime
+  "#00C000", // Dark Green
+  "#00C060", // Teal
+  "#00C0C0", // Dark Cyan
+  "#0060C0", // Dark Blue
+  "#0000C0", // Navy
+  "#6000C0", // Dark Purple
+  "#C000C0", // Dark Magenta
+  "#FF80C0", // Light Pink
+  "#800000", // Maroon
+  "#804000", // Brown
+  "#808000", // Olive Drab
+  "#408000", // Green Yellow
+  "#008000", // Dark Green
+  "#008040", // Sea Green
+  "#008080", // Dark Cyan
+  "#004080", // Dark Blue
+  "#000080", // Navy
+  "#400080", // Dark Purple
+  "#800080", // Purple
+  "#BF4080", // Rose
+  "#404040", // Dark Gray
+  "#808080", // Gray
+  "#C0C0C0", // Light Gray
+];
+
+function getSubscriptionColor(id) {
+  const index = parseInt(id, 10) % subscriptionColors.length;
+  return subscriptionColors[index];
+}
+
+
+
