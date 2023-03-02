@@ -151,11 +151,6 @@ const sortGroups = data.reduce((groups, { sort_group }) => {
       }
     },
   });
-
-  
-
-
-   
   })
   .catch((error) => {
     console.error(error);

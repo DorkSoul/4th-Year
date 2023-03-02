@@ -2,9 +2,9 @@
 <html data-wf-page="6383ccc641973c3d858a1027" data-wf-site="63839396428da071c022f716">
 <head>
   <meta charset="utf-8">
-  <title>Calander</title>
-  <meta content="Calander" property="og:title">
-  <meta content="Calander" property="twitter:title">
+  <title>Calendar</title>
+  <meta content="Calendar" property="og:title">
+  <meta content="Calendar" property="twitter:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
@@ -28,7 +28,7 @@
                 <a href="statistics.html" class="nav-link">Statistics</a>
               </li>
               <li>
-                <a href="calander.html" aria-current="page" class="nav-link w--current">Calendar</a>
+                <a href="calendar.html" aria-current="page" class="nav-link w--current">Calendar</a>
               </li>
               <li>
                 <a href="account.html" class="nav-link">Account</a>
@@ -52,7 +52,25 @@
     <div class="sub_header">
       <h2 class="heading-2">Calendar</h2>
     </div>
-    <div class="calendar"><img src="images/Calender.JPG" loading="lazy" sizes="(max-width: 767px) 100vw, (max-width: 991px) 95vw, 940px" srcset="images/Calender-p-500.jpg 500w, images/Calender-p-800.jpg 800w, images/Calender-p-1080.jpg 1080w, images/Calender.JPG 1528w" alt=""></div>
+    <div class="calendar">
+      <div class="calendar-header">
+        <button id="prev-month">&lt;</button>
+        <h2 id="calendar-month-year"></h2>
+        <button id="next-month">&gt;</button>
+      </div>
+      <div class="calendar-grid">
+        <div class="calendar-row">
+          <div class="calendar-day">Sun</div>
+          <div class="calendar-day">Mon</div>
+          <div class="calendar-day">Tue</div>
+          <div class="calendar-day">Wed</div>
+          <div class="calendar-day">Thu</div>
+          <div class="calendar-day">Fri</div>
+          <div class="calendar-day">Sat</div>
+        </div>
+      </div>
+    </div>
   </main>
+  <script src="js/calendar.js" type="text/javascript"></script>
 </body>
 </html>
