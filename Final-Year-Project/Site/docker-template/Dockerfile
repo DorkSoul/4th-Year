@@ -10,6 +10,8 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 # copying packages first helps take advantage of docker layers
 COPY package*.json ./
+COPY ./public/csv /app/public/csv
+
 
 RUN npm install
 # If you are building your code for production

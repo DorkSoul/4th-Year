@@ -1,0 +1,41 @@
+sub_id,name,category
+1,Netflix,tv and movies
+2,HBO Max,tv and movies
+3,Prime Video,tv and movies
+4,Hulu,tv and movies
+5,Disney Plus,tv and movies
+6,Apple Tv Plus,tv and movies
+7,Youtube TV,tv and movies
+8,ESPN,tv and movies
+9,Paramount Plus,tv and movies
+10,NBC Peacock,tv and movies
+11,Sound Cloud,music
+12,Spotify,music
+13,Napster,music
+14,Youtube Music,music
+15,Apple Music,music
+16,Amazon Music,music
+17,Qobuz,music
+18,Deezer,music
+19,KKBOX,music
+20,Tidal,music
+21,Xbox Game Pass,games
+22,Playstation Plus,games
+23,EA Play,games
+24,Apple Arcade,games
+25,Humble Bundle,games
+26,Google Play Pass,games
+27,Nintendo Switch Online,games
+28,Prime Gaming,games
+29,Nvidia Geforce Now,games
+30,Ubisoft Plus,games
+31,Kindle Unlimited,books
+32,Barnes & Noble Member,books
+33,Owlcrate,books
+34,Audable,books
+35,Book Of The Month,books
+36,Gousto,food
+37,Riverford,food
+38,The Cook Away,food
+39,Wild And Game,food
+40,Hello Fresh,food

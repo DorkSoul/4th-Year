@@ -51,7 +51,8 @@ CREATE TABLE "user_subs" (
     "alert_id" int,
     "sort_group" varchar,
     "user_notes" varchar,
-    "cancelled" Boolean
+    "cancelled" Boolean,
+    "rating" int
 );
 
 CREATE TABLE "user_sessions" (
