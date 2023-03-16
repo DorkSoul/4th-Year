@@ -59,6 +59,50 @@ CREATE TABLE "user_sessions" (
     "id" varchar PRIMARY KEY
 );
 
+CREATE TABLE "recommendations" (
+    "user_id" INTEGER PRIMARY KEY,
+    "sub_1" DECIMAL(3, 1),
+    "sub_2" DECIMAL(3, 1),
+    "sub_3" DECIMAL(3, 1),
+    "sub_4" DECIMAL(3, 1),
+    "sub_5" DECIMAL(3, 1),
+    "sub_6" DECIMAL(3, 1),
+    "sub_7" DECIMAL(3, 1),
+    "sub_8" DECIMAL(3, 1),
+    "sub_9" DECIMAL(3, 1),
+    "sub_10" DECIMAL(3, 1),
+    "sub_11" DECIMAL(3, 1),
+    "sub_12" DECIMAL(3, 1),
+    "sub_13" DECIMAL(3, 1),
+    "sub_14" DECIMAL(3, 1),
+    "sub_15" DECIMAL(3, 1),
+    "sub_16" DECIMAL(3, 1),
+    "sub_17" DECIMAL(3, 1),
+    "sub_18" DECIMAL(3, 1),
+    "sub_19" DECIMAL(3, 1),
+    "sub_20" DECIMAL(3, 1),
+    "sub_21" DECIMAL(3, 1),
+    "sub_22" DECIMAL(3, 1),
+    "sub_23" DECIMAL(3, 1),
+    "sub_24" DECIMAL(3, 1),
+    "sub_25" DECIMAL(3, 1),
+    "sub_26" DECIMAL(3, 1),
+    "sub_27" DECIMAL(3, 1),
+    "sub_28" DECIMAL(3, 1),
+    "sub_29" DECIMAL(3, 1),
+    "sub_30" DECIMAL(3, 1),
+    "sub_31" DECIMAL(3, 1),
+    "sub_32" DECIMAL(3, 1),
+    "sub_33" DECIMAL(3, 1),
+    "sub_34" DECIMAL(3, 1),
+    "sub_35" DECIMAL(3, 1),
+    "sub_36" DECIMAL(3, 1),
+    "sub_37" DECIMAL(3, 1),
+    "sub_38" DECIMAL(3, 1),
+    "sub_39" DECIMAL(3, 1),
+    "sub_40" DECIMAL(3, 1)
+);
+
 ALTER TABLE "user_login" ADD FOREIGN KEY ("id") REFERENCES "users" ("id");
 
 ALTER TABLE "user_subs" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");

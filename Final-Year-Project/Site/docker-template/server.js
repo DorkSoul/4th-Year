@@ -36,6 +36,7 @@ app.use(express.static("public"));
   app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
     importUserData(client); // call the importUserData function on initial startup
+    importRecommendationsData(client); // call the importRecommendationsData function on initial startup
   });
 })();
 
@@ -202,11 +203,12 @@ app.get("/add_subscriptions", async (req, res) =>
 
 const fs = require('fs');
 const csv = require('csv-parser');
+const readline = require('readline');
 const path = require('path');
 const usersCsvPath = path.join('/app', 'public', 'csv', 'users.csv');
 const userLoginCsvPath = path.join('/app', 'public', 'csv', 'user_login.csv');
 const userSubsCsvPath = path.join('/app', 'public', 'csv', 'user_subs.csv');
-
+const recommendationsCsvPath = path.join('/app', 'public', 'csv', 'rounded_user_item_estimate_values.csv');
 
 
 const importUserData = async (client) => {
@@ -298,4 +300,43 @@ const importUserData = async (client) => {
 } catch (error) {
   console.error(error.stack);
 }
+};
+
+const importRecommendationsData = async (client) => {
+  try {
+    fs.createReadStream(recommendationsCsvPath)
+      .pipe(csv())
+      .on('data', async (row) => {
+        const { id, ...subscriptions } = row;
+        const subscriptionValues = Object.values(subscriptions).map(Number);
+        const queryParams = [id, ...subscriptionValues];
+
+        try {
+          await client.query(
+            `
+            INSERT INTO "recommendations" (
+              "user_id", "sub_1", "sub_2", "sub_3", "sub_4", "sub_5", "sub_6", "sub_7", "sub_8", "sub_9", "sub_10",
+              "sub_11", "sub_12", "sub_13", "sub_14", "sub_15", "sub_16", "sub_17", "sub_18", "sub_19", "sub_20",
+              "sub_21", "sub_22", "sub_23", "sub_24", "sub_25", "sub_26", "sub_27", "sub_28", "sub_29", "sub_30",
+              "sub_31", "sub_32", "sub_33", "sub_34", "sub_35", "sub_36", "sub_37", "sub_38", "sub_39", "sub_40"
+            ) VALUES (
+              $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21,
+              $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41
+            )
+            `,
+            queryParams
+          );
+        } catch (error) {
+          console.error(error.stack);
+        }
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed.');
+      })
+      .on('error', (error) => {
+        console.error(error.stack);
+      });
+  } catch (error) {
+    console.error(error.stack);
+  }
 };

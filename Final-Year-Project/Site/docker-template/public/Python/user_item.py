@@ -95,7 +95,7 @@ def encode_ids(data):
 # data -> dataframe containing 1 user 1subscription 1rating per row
 # alpha ->  number of factors/learning rate
 # n_epochs -> number of iteration of the SGD procedure
-def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .005, n_epochs = 20):
+def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .009, n_epochs = 20):
     #Learn the vectors P and Q(all the weighted p_u and q_i) with SGD
         
     # Encoding userId's and movieId's in data
@@ -158,7 +158,7 @@ def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .005, n_epochs = 2
     return p, q 
 
 def estimate(u, i, p, q):
-    '''Estimate rating of user u for movie i.'''
+    '''Estimate rating of user u for subscription i.'''
 
     # scalar product of p[u]and q[i]
     return np.dot(p[u], q[i].transpose())
@@ -188,7 +188,13 @@ user_item_estimate_values.sort_index(axis=0, inplace=True)
 user_item_estimate_values.sort_index(axis=1, inplace=True)
 
 #Get user*item matrix
-print(user_item_estimate_values.head())
+print("user_item_estimate_values\n", user_item_estimate_values.head())
+
+# Round each number to one decimal place
+rounded_df = user_item_estimate_values.round(1)
+
+# Save the sorted DataFrame to a new CSV file
+rounded_df.to_csv('rounded_user_item_estimate_values.csv')
 
 # ratings given by user 1
 print("ratings given by user 1\n",user_ratings.loc[1][:10])
@@ -207,7 +213,7 @@ print("Estimated ratings for user 2 after SVD\n", user_item_estimate_values.loc[
 
 
 # Give recommendations to a user(give the 10 highest recommendations: the recommendations with the highest rating)
-user_recommendations = list((user_item_estimate_values.loc[2]).sort_values(ascending=False)[:20].index)
+user_recommendations = list((user_item_estimate_values.loc[2]).sort_values(ascending=False)[:10].index)
 print("user_recommendation: ",user_recommendations)
 
 recom_list = pd.DataFrame(user_recommendations)
