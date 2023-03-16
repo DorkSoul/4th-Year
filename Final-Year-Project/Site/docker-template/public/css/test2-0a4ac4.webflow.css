@@ -504,6 +504,7 @@
   flex-direction: column;
   -o-object-fit: fill;
   object-fit: fill;
+  z-index: 1;
 }
 
 .div-block-9 {
@@ -511,20 +512,28 @@
 }
 
 .stats_popup {
+  position: absolute;
+  top: 0; /* Adjust this value to position the popup below the banner */
   overflow: hidden;
   min-height: 600px;
   background-color: #f0f0f0;
+  z-index: 2; /* Add z-index to make sure the popup appears above the content */
 }
 
-.stats_info {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+.stats_popup {
+  position: absolute;
+  top: 50%;
+  left: 0; /* Set the left value to 0 */
+  transform: translateY(-50%); /* Remove the -50% on the X-axis */
+  width: 100%; /* Set the width to 100% */
+  overflow: hidden;
+  min-height: 600px;
+  background-color: #f0f0f0;
+  z-index: 2;
+}
+
+.w-container {
+  position: relative;
 }
 
 .stat_info_block {

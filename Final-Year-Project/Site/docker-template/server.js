@@ -106,12 +106,13 @@ app.post('/login', async (req, res) => {
 
     // Check if a user was found
     if (result.rows.length > 0) {
+      const userId = result.rows[0].id;
       const sessionId = req.sessionID;
 
       // Insert the session ID into the user_sessions table
       await client.query('INSERT INTO user_sessions (id) VALUES ($1)', [sessionId]);
 
-      res.json({ success: true, sessionId: sessionId });
+      res.json({ success: true, sessionId: sessionId, userId: userId });
     } else {
       // Send an error response if no user was found
       res.status(401).json({ error: 'Invalid username or password' });
@@ -174,6 +175,47 @@ app.get("/add_subscriptions", async (req, res) =>
       res.send(JSON.stringify(result));
   }
 })});
+
+app.post("/recommendations", async (req, res) => {
+  const { userId } = req.body;
+
+  const query = `
+    SELECT sub_1, sub_2, sub_3, sub_4, sub_5, sub_6, sub_7, sub_8, sub_9, sub_10,
+           sub_11, sub_12, sub_13, sub_14, sub_15, sub_16, sub_17, sub_18, sub_19, sub_20,
+           sub_21, sub_22, sub_23, sub_24, sub_25, sub_26, sub_27, sub_28, sub_29, sub_30,
+           sub_31, sub_32, sub_33, sub_34, sub_35, sub_36, sub_37, sub_38, sub_39, sub_40
+    FROM recommendations
+    WHERE user_id = $1;
+  `;
+
+  try {
+    const result = await client.query(query, [userId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.get("/all-subscriptions", async (req, res) => {
+  const query = `
+    SELECT *
+    FROM subscriptions;
+  `;
+
+  try {
+    const results = await client.query(query);
+    res.setHeader("Content-Type", "application/json");
+    res.status(200);
+    res.send(JSON.stringify(results.rows));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Query failed");
+  }
+});
+
+
+
 
 
 
