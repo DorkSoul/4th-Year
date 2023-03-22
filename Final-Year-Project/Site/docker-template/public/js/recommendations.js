@@ -134,12 +134,19 @@ document.addEventListener("DOMContentLoaded", function () {
           </a>
         `;
         recommendationsDiv.appendChild(newDiv);
-        
+    
         // Add the show-popup class to the image element
         const imageElement = newDiv.querySelector('img');
         imageElement.parentNode.classList.add('show-popup');
+    
+        // Add click event listener to the subscription image
+        imageElement.addEventListener('click', function (e) {
+          e.preventDefault();
+          togglePopup();
+        });
       });
     }
+    
     
     function getSubscriptionImageById(id) {
       const subscription = subscriptions.find(sub => sub.id === id);
