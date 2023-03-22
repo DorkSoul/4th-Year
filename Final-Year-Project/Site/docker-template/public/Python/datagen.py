@@ -12,7 +12,10 @@ def generate_user_data():
     logins = []
     subs = []
 
-    for i in range(1000):
+    # Create a list of all possible subscription ids
+    sub_ids = list(range(1, 41))
+
+    for i in range(2000):
         phone_number = f"086{str(random.randint(0, 9999999)).zfill(7)}"
         currency = random.choice(['euro', 'dollar', 'pound'])
         time_zone = random.randint(-12, 11)
@@ -37,9 +40,13 @@ def generate_user_data():
 
         logins.append([i + 1, f"user{i + 1}", 'password'])
 
-        sub_count = random.randint(1, 20)
-        for j in range(sub_count):
-            sub_id = random.randint(1, 40)
+        # Shuffle the list of possible subscription ids
+        random.shuffle(sub_ids)
+        # Select a random number of subscriptions between 1 and 9
+        sub_count = random.randint(1, min(len(sub_ids), 9))
+        assigned_subs = sub_ids[:sub_count]
+
+        for j, sub_id in enumerate(assigned_subs):
             cost = random.randint(1, 30)
             start_date = f"2021-{random.randint(1, 12)}-{random.randint(1, 28)}"
             recurring_length = random.choice(['monthly', 'monthly'])
@@ -50,7 +57,7 @@ def generate_user_data():
             )[0]
             user_notes = f"This is a note for user {i + 1} subscription {j + 1}."
             cancelled = random.choice([False, False])
-            rating = random.randint(1, 10)
+            rating = random.randint(1, 5)
 
             subs.append([
                 i + 1,
@@ -66,6 +73,9 @@ def generate_user_data():
             ])
 
     return users, logins, subs
+
+
+
 
 def write_csv(filename, data, header=None):
     with open(filename, 'w', newline='') as csvfile:

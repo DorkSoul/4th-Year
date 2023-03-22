@@ -95,7 +95,7 @@ def encode_ids(data):
 # data -> dataframe containing 1 user 1subscription 1rating per row
 # alpha ->  number of factors/learning rate
 # n_epochs -> number of iteration of the SGD procedure
-def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .009, n_epochs = 20):
+def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .01, n_epochs = 20):
     #Learn the vectors P and Q(all the weighted p_u and q_i) with SGD
         
     # Encoding userId's and movieId's in data
@@ -193,8 +193,8 @@ print("user_item_estimate_values\n", user_item_estimate_values.head())
 # Round each number to one decimal place
 rounded_df = user_item_estimate_values.round(1)
 
-# Save the sorted DataFrame to a new CSV file
-rounded_df.to_csv('rounded_user_item_estimate_values.csv')
+# Save the sorted DataFrame to a new CSV file with the index label
+rounded_df.to_csv('rounded_user_item_estimate_values.csv', index_label='id')
 
 # ratings given by user 1
 print("ratings given by user 1\n",user_ratings.loc[1][:10])
