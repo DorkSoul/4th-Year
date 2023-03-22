@@ -30,37 +30,6 @@ if (!sessionId) {
   });
 }
 
-function displayRecommendations() {
-  recommendationsDiv.innerHTML = ''; // Clear the existing content
-
-  const topRecommendations = recommendations.slice(0, 5);
-  topRecommendations.forEach((rec) => {
-    const subscriptionImage = getSubscriptionImageById(rec.id);
-
-    const newDiv = document.createElement('div');
-    newDiv.classList.add('grid-item');
-    newDiv.innerHTML = `
-      <a href="#" class="show-popup">
-        <img src="${subscriptionImage}" loading="lazy" alt="">
-      </a>
-    `;
-    recommendationsDiv.appendChild(newDiv);
-    
-    // Add the show-popup class to the image element
-    const imageElement = newDiv.querySelector('img');
-    imageElement.parentNode.classList.add('show-popup');
-  });
-}
-
-
-
-
-
-function getSubscriptionImageById(id) {
-  const subscription = subscriptions.find(sub => sub.id === id);
-  return subscription ? subscription.image : '';
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     var showPopupButtons = document.querySelectorAll(".show-popup");
     var statsPopup = document.getElementById("stats-popup");
@@ -148,6 +117,33 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error(error);
           alert(error.message);
         });
+    }
+
+    function displayRecommendations() {
+      recommendationsDiv.innerHTML = ''; // Clear the existing content
+    
+      const topRecommendations = recommendations.slice(0, 5);
+      topRecommendations.forEach((rec) => {
+        const subscriptionImage = getSubscriptionImageById(rec.id);
+    
+        const newDiv = document.createElement('div');
+        newDiv.classList.add('grid-item');
+        newDiv.innerHTML = `
+          <a href="#" class="show-popup">
+            <img src="${subscriptionImage}" loading="lazy" alt="">
+          </a>
+        `;
+        recommendationsDiv.appendChild(newDiv);
+        
+        // Add the show-popup class to the image element
+        const imageElement = newDiv.querySelector('img');
+        imageElement.parentNode.classList.add('show-popup');
+      });
+    }
+    
+    function getSubscriptionImageById(id) {
+      const subscription = subscriptions.find(sub => sub.id === id);
+      return subscription ? subscription.image : '';
     }
     
     // Fetch subscriptions and recommendations, and then display recommendations
