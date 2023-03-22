@@ -31,34 +31,57 @@ if (!sessionId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    var showPopupButtons = document.querySelectorAll(".show-popup");
-    var statsPopup = document.getElementById("stats-popup");
-    var closeButton = document.querySelector(".button-2");
+  var statsPopup = document.getElementById("stats-popup");
+  var closeButton = document.querySelector(".button-2");
+
+  function togglePopup() {
+    if (statsPopup.style.display === "none" || statsPopup.style.display === "") {
+      statsPopup.style.display = "block";
+      statsPopup.style.visibility = "visible";
+    } else {
+      statsPopup.style.display = "none";
+      statsPopup.style.visibility = "hidden";
+    }
+    statsPopup.style.pointerEvents = statsPopup.style.display === "block" ? "auto" : "none";
+  }
+
+  function fillStatsPopup(subscription) {
+    const statTextDataElements = statsPopup.querySelectorAll(".stat_text_data");
   
-    function togglePopup() {
-        if (statsPopup.style.display === "none" || statsPopup.style.display === "") {
-          statsPopup.style.display = "block";
-          statsPopup.style.visibility = "visible";
-        } else {
-          statsPopup.style.display = "none";
-          statsPopup.style.visibility = "hidden";
-        }
-        // Add the following line to fix the click event issue:
-        statsPopup.style.pointerEvents = statsPopup.style.display === "block" ? "auto" : "none";
+    statTextDataElements[0].innerText = subscription.name;
+    statTextDataElements[1].innerText = subscription.category;
+    statTextDataElements[2].innerText = subscription.description;
+  
+    const starRatingContainer = statTextDataElements[3];
+    starRatingContainer.innerHTML = ''; // Clear the previous star rating
+  
+    const rating = subscription.rating;
+    const totalStars = 5;
+  
+    for (let i = 1; i <= totalStars; i++) {
+      const star = document.createElement('span');
+      star.classList.add('star');
+      star.innerText = '★';
+  
+      if (i <= rating) {
+        star.style.color = 'yellow';
+      } else {
+        star.style.color = 'gray';
       }
-      
   
-    showPopupButtons.forEach(function (button) {
-      button.addEventListener("click", function (e) {
-        e.preventDefault();
-        togglePopup();
-      });
-    });
+      starRatingContainer.appendChild(star);
+    }
+  }
   
-    closeButton.addEventListener("click", function (e) {
-      e.preventDefault();
-      togglePopup();
-    });
+
+  function getSubscriptionById(id) {
+    return subscriptions.find(sub => sub.id === id);
+  }
+
+  closeButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    togglePopup();
+  });
   
     function fetchSubscriptions() {
       return fetch('/all-subscriptions')
@@ -92,7 +115,24 @@ document.addEventListener("DOMContentLoaded", function () {
           alert(error.message);
         });
     }
-        
+
+    function setupEventListeners() {
+      var showPopupButtons = document.querySelectorAll(".show-popup");
+  
+      showPopupButtons.forEach(function (button) {
+        button.addEventListener("click", function (e) {
+          e.preventDefault();
+          const subscriptionId = parseInt(button.dataset.subscriptionId);
+          const subscription = getSubscriptionById(subscriptionId);
+  
+          if (subscription) {
+            fillStatsPopup(subscription);
+            togglePopup();
+          }
+        });
+      });
+    }
+  
 
     function fetchRecommendations() {
       return fetch('/recommendations', {
@@ -120,32 +160,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function displayRecommendations() {
-      recommendationsDiv.innerHTML = ''; // Clear the existing content
-    
+      recommendationsDiv.innerHTML = '';
+  
       const topRecommendations = recommendations.slice(0, 5);
       topRecommendations.forEach((rec) => {
         const subscriptionImage = getSubscriptionImageById(rec.id);
-    
+  
         const newDiv = document.createElement('div');
         newDiv.classList.add('grid-item');
         newDiv.innerHTML = `
-          <a href="#" class="show-popup">
+          <a href="#" class="show-popup" data-subscription-id="${rec.id}">
             <img src="${subscriptionImage}" loading="lazy" alt="">
           </a>
         `;
         recommendationsDiv.appendChild(newDiv);
-    
-        // Add the show-popup class to the image element
-        const imageElement = newDiv.querySelector('img');
-        imageElement.parentNode.classList.add('show-popup');
-    
-        // Add click event listener to the subscription image
-        imageElement.addEventListener('click', function (e) {
-          e.preventDefault();
-          togglePopup();
-        });
       });
+  
+      // Call setupEventListeners after displaying the recommendations
+      setupEventListeners();
     }
+  
+    
+    
     
     
     function getSubscriptionImageById(id) {
@@ -155,12 +191,12 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Fetch subscriptions and recommendations, and then display recommendations
     Promise.all([fetchSubscriptions(), fetchRecommendations()])
-      .then(() => {
-        displayRecommendations();
-      })
-      .catch((error) => {
-        console.error(error);
-        alert(error.message);
-      });
+    .then(() => {
+      displayRecommendations();
+    })
+    .catch((error) => {
+      console.error(error);
+      alert(error.message);
     });
+});
 
