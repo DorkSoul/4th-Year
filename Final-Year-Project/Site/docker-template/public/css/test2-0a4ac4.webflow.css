@@ -513,23 +513,28 @@
 
 .stats_popup {
   position: absolute;
-  top: 0; /* Adjust this value to position the popup below the banner */
-  overflow: hidden;
-  min-height: 600px;
-  background-color: #f0f0f0;
-  z-index: 2; /* Add z-index to make sure the popup appears above the content */
-}
-
-.stats_popup {
-  position: absolute;
-  top: 50%;
-  left: 0; /* Set the left value to 0 */
-  transform: translateY(-50%); /* Remove the -50% on the X-axis */
-  width: 100%; /* Set the width to 100% */
-  overflow: hidden;
-  min-height: 600px;
+  top: calc(60px + 1rem); /* height of the banner plus some padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1140px;  
+  width: 100%; 
+  max-height: 400px;
   background-color: #f0f0f0;
   z-index: 2;
+}
+
+.stats_popup_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* adjust as needed */
+}
+
+.stats_info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
 }
 
 .w-container {
@@ -1521,6 +1526,8 @@
 .grid-item:hover {
   box-shadow: 0 16px 24px rgba(0, 0, 0, 0.5), 0 10px 16px rgba(0, 0, 0, 0.35);
 }
+
+
 
 
 

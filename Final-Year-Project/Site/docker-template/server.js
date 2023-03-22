@@ -382,3 +382,72 @@ const importRecommendationsData = async (client) => {
     console.error(error.stack);
   }
 };
+
+
+
+
+
+
+
+const calculateAverageRatings = async () => {
+  const userSubsData = [];
+
+  // Read user_subs.csv file
+  await new Promise((resolve, reject) => {
+    fs.createReadStream(userSubsCsvPath)
+      .pipe(csv())
+      .on('data', (row) => {
+        userSubsData.push(row);
+      })
+      .on('end', resolve)
+      .on('error', reject);
+  });
+
+  // Calculate the average rating for each unique sub_id
+  const ratingsMap = new Map();
+
+  for (const row of userSubsData) {
+    const { sub_id, rating } = row;
+
+    if (ratingsMap.has(sub_id)) {
+      const { totalRating, count } = ratingsMap.get(sub_id);
+      ratingsMap.set(sub_id, { totalRating: totalRating + Number(rating), count: count + 1 });
+    } else {
+      ratingsMap.set(sub_id, { totalRating: Number(rating), count: 1 });
+    }
+  }
+
+  const averageRatings = new Map();
+  for (const [sub_id, { totalRating, count }] of ratingsMap.entries()) {
+    averageRatings.set(sub_id, totalRating / count);
+  }
+
+  return averageRatings;
+};
+
+const updateSubscriptionsRatings = async (client, averageRatings) => {
+  try {
+    // Update the 'rating' column in the "subscriptions" table
+    for (const [sub_id, rating] of averageRatings.entries()) {
+      const roundedRating = parseFloat(rating.toFixed(1));
+      try {
+        await client.query(
+          `UPDATE "subscriptions" SET "rating" = $1 WHERE "id" = $2`,
+          [roundedRating, sub_id]
+        );
+      } catch (error) {
+        console.error(error.stack);
+      }
+    }
+  } catch (error) {
+    console.error(error.stack);
+  }
+};
+
+// Execute the functions
+(async () => {
+  const averageRatings = await calculateAverageRatings();
+  await updateSubscriptionsRatings(client, averageRatings);
+})();
+
+
