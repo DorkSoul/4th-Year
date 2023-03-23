@@ -37,6 +37,8 @@ app.use(express.static("public"));
     console.log(`App listening at http://localhost:${port}`);
     importUserData(client); // call the importUserData function on initial startup
     importRecommendationsData(client); // call the importRecommendationsData function on initial startup
+    importUserXUserData(client); // call the importUserXUserData function on initial startup
+    importSubXSubData(client); // call the importSubXSubData function on initial startup
   });
 })();
 
@@ -250,8 +252,9 @@ const path = require('path');
 const usersCsvPath = path.join('/app', 'public', 'csv', 'users.csv');
 const userLoginCsvPath = path.join('/app', 'public', 'csv', 'user_login.csv');
 const userSubsCsvPath = path.join('/app', 'public', 'csv', 'user_subs.csv');
-const recommendationsCsvPath = path.join('/app', 'public', 'csv', 'rounded_user_item_estimate_values.csv');
-
+const recommendationsCsvPath = path.join('/app', 'public', 'csv', 'userXsub.csv');
+const userXuserCsvPath = path.join('/app', 'public', 'csv', 'userXuser.csv');
+const subXsubCsvPath = path.join('/app', 'public', 'csv', 'subXsub.csv');
 
 const importUserData = async (client) => {
   try {
@@ -383,11 +386,68 @@ const importRecommendationsData = async (client) => {
   }
 };
 
+const importUserXUserData = async (client) => {
+  try {
+    fs.createReadStream(userXuserCsvPath)
+      .pipe(csv())
+      .on('data', async (row) => {
+        const { user_id, sub_id_1, sub_id_2, sub_id_3, sub_id_4, sub_id_5 } = row;
+
+        try {
+          await client.query(
+            `
+            INSERT INTO "user_user" (
+              "user_id", "sub_id_1", "sub_id_2", "sub_id_3", "sub_id_4", "sub_id_5"
+            ) VALUES ($1, $2, $3, $4, $5, $6)
+            `,
+            [user_id, sub_id_1, sub_id_2, sub_id_3, sub_id_4, sub_id_5]
+          );
+        } catch (error) {
+          console.error(error.stack);
+        }
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed.');
+      })
+      .on('error', (error) => {
+        console.error(error.stack);
+      });
+  } catch (error) {
+    console.error(error.stack);
+  }
+};
 
 
+const importSubXSubData = async (client) => {
+  try {
+    fs.createReadStream(subXsubCsvPath)
+      .pipe(csv())
+      .on('data', async (row) => {
+        const { sub_id, similar_sub_id_1, similar_sub_id_2, similar_sub_id_3, similar_sub_id_4, similar_sub_id_5 } = row;
 
-
-
+        try {
+          await client.query(
+            `
+            INSERT INTO "sub_sub" (
+              "sub_id", "similar_sub_id_1", "similar_sub_id_2", "similar_sub_id_3", "similar_sub_id_4", "similar_sub_id_5"
+            ) VALUES ($1, $2, $3, $4, $5, $6)
+            `,
+            [sub_id, similar_sub_id_1, similar_sub_id_2, similar_sub_id_3, similar_sub_id_4, similar_sub_id_5]
+          );
+        } catch (error) {
+          console.error(error.stack);
+        }
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed.');
+      })
+      .on('error', (error) => {
+        console.error(error.stack);
+      });
+  } catch (error) {
+    console.error(error.stack);
+  }
+};
 
 const calculateAverageRatings = async () => {
   const userSubsData = [];

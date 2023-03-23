@@ -151,13 +151,13 @@ similar_users_df["similarity_score"] = sim_score
 #print(similar_users_df)
 
 ratings = ratings.drop(['Timestamp'], axis = 1)
-#print(ratings)
+# print(ratings)
 
 movies = movies.drop(['Genre', 'Year'], axis = 1)
-#print(movies)
+print(movies)
 
 new_movie_df = pd.merge(ratings,movies, on='Movie_id')
-#print(new_movie_df.columns)
+print(new_movie_df.columns)
 
 #new_movie_df2 = pd.DataFrame(new_movie_df.groupby('Title')['Rating'].count())
 

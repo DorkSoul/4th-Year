@@ -104,6 +104,24 @@ CREATE TABLE "recommendations" (
     "sub_40" DECIMAL(3, 1)
 );
 
+CREATE TABLE "user_user" (
+    "user_id" INTEGER PRIMARY KEY,
+    "sub_id_1" INTEGER,
+    "sub_id_2" INTEGER,
+    "sub_id_3" INTEGER,
+    "sub_id_4" INTEGER,
+    "sub_id_5" INTEGER
+);
+
+CREATE TABLE "sub_sub" (
+    "sub_id" INTEGER PRIMARY KEY,
+    "similar_sub_id_1" INTEGER,
+    "similar_sub_id_2" INTEGER,
+    "similar_sub_id_3" INTEGER,
+    "similar_sub_id_4" INTEGER,
+    "similar_sub_id_5" INTEGER
+);
+
 ALTER TABLE "user_login" ADD FOREIGN KEY ("id") REFERENCES "users" ("id");
 
 ALTER TABLE "user_subs" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");

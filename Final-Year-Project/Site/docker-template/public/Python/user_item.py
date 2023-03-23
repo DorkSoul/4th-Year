@@ -194,7 +194,7 @@ print("user_item_estimate_values\n", user_item_estimate_values.head())
 rounded_df = user_item_estimate_values.round(1)
 
 # Save the sorted DataFrame to a new CSV file with the index label
-rounded_df.to_csv('rounded_user_item_estimate_values.csv', index_label='id')
+rounded_df.to_csv('userXsub.csv', index_label='id')
 
 # ratings given by user 1
 print("ratings given by user 1\n",user_ratings.loc[1][:10])
@@ -236,6 +236,6 @@ final_recom_list = get_sub_name_from_movieid()
 print(final_recom_list)
 
 recom_list = pd.DataFrame(final_recom_list)
-recom_list.to_csv("userXitem.csv")
+# recom_list.to_csv("userXitem.csv")
     
 
