@@ -216,6 +216,138 @@ app.get("/all-subscriptions", async (req, res) => {
   }
 });
 
+app.post("/subscriptions", async (req, res) => {
+  const { username, password } = req.body;
+
+  const query = `
+    SELECT s.id, s.name, s.category, s.image, us.cost, us.start_date, us.recurring_length, us.sort_group 
+    FROM user_login ul 
+    INNER JOIN users u ON ul.id = u.id 
+    INNER JOIN user_subs us ON u.id = us.user_id 
+    INNER JOIN subscriptions s ON us.sub_id = s.id 
+    WHERE ul.username = $1 AND ul.password = $2;
+  `;
+
+  const params = [username, password];
+
+  try {
+    const results = await client.query(query, params);
+    res.setHeader("Content-Type", "application/json");
+    res.status(200);
+    res.send(JSON.stringify(results.rows));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Query failed");
+  }
+});
+
+app.post("/user_user", async (req, res) => {
+  const { userId } = req.body;
+
+  const query = `
+    SELECT *
+    FROM user_user
+    WHERE user_id = $1;
+  `;
+
+  try {
+    const result = await client.query(query, [userId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.post("/sub_subs", async (req, res) => {
+  const { subId } = req.body;
+
+  const query = `
+    SELECT *
+    FROM sub_sub
+    WHERE sub_id = $1;
+  `;
+
+  try {
+    const result = await client.query(query, [subId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

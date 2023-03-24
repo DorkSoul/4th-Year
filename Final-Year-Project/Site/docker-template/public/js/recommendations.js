@@ -3,10 +3,13 @@ const userId = localStorage.getItem("userId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
 const recommendationsDiv = document.getElementById('recommendations');
+const userSuggestionsDiv = document.getElementById("user_suggestions");
 
 
 let recommendations = [];
 let subscriptions = [];
+let userSuggestions = [];
+let userSubscriptionIds = [];
 
 if (!sessionId) {
   // Redirect to login page
@@ -83,120 +86,252 @@ document.addEventListener("DOMContentLoaded", function () {
     togglePopup();
   });
   
-    function fetchSubscriptions() {
-      return fetch('/all-subscriptions')
-        .then((response) => response.json())
-        .then((data) => {
-          subscriptions = data;    
-          data.forEach((subscription) => {
-            const { id, name, category, image, description } = subscription;
-            console.log(subscription);
-    
-            // Add content (e.g., image, name, etc.) to the subscription element
-            const newDiv = document.createElement('div');
-            newDiv.classList.add('grid-item');
-            newDiv.innerHTML = `
-              <a href="#" class="show-popup">
-                <img src="${image}" loading="lazy" alt="">
-              </a>
-            `;
-            recommendationsDiv.appendChild(newDiv);
-          });
-    
-          // Add the show-popup class to each image element
-          const imageElements = document.querySelectorAll('.grid-item a img');
-          imageElements.forEach(img => {
-            img.parentNode.classList.add('show-popup');
-          });
-    
-        })
-        .catch((error) => {
-          console.error(error);
-          alert(error.message);
+  function fetchSubscriptions() {
+    return fetch('/all-subscriptions')
+      .then((response) => response.json())
+      .then((data) => {
+        subscriptions = data;    
+        data.forEach((subscription) => {
+          const { id, name, category, image, description } = subscription;
+          console.log(subscription);
+  
+          // Add content (e.g., image, name, etc.) to the subscription element
+          const newDiv = document.createElement('div');
+          newDiv.classList.add('grid-item');
+          newDiv.innerHTML = `
+            <a href="#" class="show-popup">
+              <img src="${image}" loading="lazy" alt="">
+            </a>
+          `;
+          recommendationsDiv.appendChild(newDiv);
         });
-    }
+  
+        // Add the show-popup class to each image element
+        const imageElements = document.querySelectorAll('.grid-item a img');
+        imageElements.forEach(img => {
+          img.parentNode.classList.add('show-popup');
+        });
+  
+      })
+      .catch((error) => {
+        console.error(error);
+        alert(error.message);
+      });
+  }
 
-    function setupEventListeners() {
-      var showPopupButtons = document.querySelectorAll(".show-popup");
+  function setupEventListeners() {
+    var showPopupButtons = document.querySelectorAll(".show-popup");
+
+    showPopupButtons.forEach(function (button) {
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+        const subscriptionId = parseInt(button.dataset.subscriptionId);
+        const subscription = getSubscriptionById(subscriptionId);
+
+        if (subscription) {
+          fillStatsPopup(subscription);
+          togglePopup();
+        }
+      });
+    });
+  }
   
-      showPopupButtons.forEach(function (button) {
-        button.addEventListener("click", function (e) {
-          e.preventDefault();
-          const subscriptionId = parseInt(button.dataset.subscriptionId);
-          const subscription = getSubscriptionById(subscriptionId);
+
+  function fetchRecommendations() {
+    return fetch('/recommendations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId })
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Convert the response object into an array of objects with key-value pairs
+        const recommendationArray = Object.entries(data[0]).map(([key, value]) => ({
+          id: parseInt(key.substring(4)), // Remove "sub_" and convert the remaining string to an integer
+          rating: parseFloat(value),
+        }));
+
+        // Sort the array by size from biggest to smallest
+        recommendations = recommendationArray.sort((a, b) => b.rating - a.rating);
+        console.log(recommendations);
+
+      })
+      .catch((error) => {
+        console.error(error);
+        alert(error.message);
+      });
+  }
+
+  function displayRecommendations() {
+    recommendationsDiv.innerHTML = '';
+
+    const topRecommendations = recommendations.slice(0, 5);
+    topRecommendations.forEach((rec) => {
+      const subscriptionImage = getSubscriptionImageById(rec.id);
+
+      const newDiv = document.createElement('div');
+      newDiv.classList.add('grid-item');
+      newDiv.innerHTML = `
+        <a href="#" class="show-popup" data-subscription-id="${rec.id}">
+          <img src="${subscriptionImage}" loading="lazy" alt="">
+        </a>
+      `;
+      recommendationsDiv.appendChild(newDiv);
+    });
+
+    // Call setupEventListeners after displaying the recommendations
+    setupEventListeners();
+  }
+
+    
+
+  // Modify fetchUserSuggestions function to process the data
+  function fetchUserSuggestions() {
+    return fetch('/user_user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId })
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Extract subscription IDs from the data
+        const userSuggestions = Object.entries(data[0])
+          .filter(([key]) => key.startsWith('sub_id_'))
+          .map(([_, value]) => parseInt(value));
+        
+        // Return userSuggestions array
+        return userSuggestions;
+      })
+      .catch((error) => {
+        console.error(error);
+        alert(error.message);
+      });
+  }
+
+  function displayUserSuggestions(subscriptionIds) {
+    userSuggestionsDiv.innerHTML = '';
+
+    subscriptionIds.forEach((subscriptionId) => {
+      const subscriptionImage = getSubscriptionImageById(subscriptionId);
+
+      const newDiv = document.createElement('div');
+      newDiv.classList.add('grid-item');
+      newDiv.innerHTML = `
+        <a href="#" class="show-popup" data-subscription-id="${subscriptionId}">
+          <img src="${subscriptionImage}" loading="lazy" alt="">
+        </a>
+      `;
+      userSuggestionsDiv.appendChild(newDiv);
+    });
+
+    // Call setupEventListeners after displaying the user suggestions
+    setupEventListeners();
+  }
+
+  function fetchSimilarSubs() {
+    return fetch("/subscriptions", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      userSubscriptionIds = data.map(sub => sub.id);
   
-          if (subscription) {
-            fillStatsPopup(subscription);
-            togglePopup();
+      const promises = userSubscriptionIds.map(subId => {
+        return fetch('/sub_subs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subId })
+        })
+        .then(response => response.json());
+      });
+  
+      return Promise.all(promises);
+    })
+    .then(results => {
+      const similarSubsCounts = {};
+      
+      results.forEach(data => {
+        data.forEach(subSub => {
+          for (let i = 1; i <= 5; i++) {
+            const similarSubId = subSub[`similar_sub_id_${i}`];
+            if (similarSubId !== null && similarSubId !== undefined) {
+              if (similarSubId in similarSubsCounts) {
+                similarSubsCounts[similarSubId]++;
+              } else {
+                similarSubsCounts[similarSubId] = 1;
+              }
+            }
           }
         });
       });
-    }
   
-
-    function fetchRecommendations() {
-      return fetch('/recommendations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId })
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Convert the response object into an array of objects with key-value pairs
-          const recommendationArray = Object.entries(data[0]).map(([key, value]) => ({
-            id: parseInt(key.substring(4)), // Remove "sub_" and convert the remaining string to an integer
-            rating: parseFloat(value),
-          }));
-
-          // Sort the array by size from biggest to smallest
-          recommendations = recommendationArray.sort((a, b) => b.rating - a.rating);
-          console.log(recommendations);
-
-        })
-        .catch((error) => {
-          console.error(error);
-          alert(error.message);
-        });
-    }
-
-    function displayRecommendations() {
-      recommendationsDiv.innerHTML = '';
+      const sortedSimilarSubs = Object.entries(similarSubsCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(entry => parseInt(entry[0]))
+        .slice(0, 5);
   
-      const topRecommendations = recommendations.slice(0, 5);
-      topRecommendations.forEach((rec) => {
-        const subscriptionImage = getSubscriptionImageById(rec.id);
-  
-        const newDiv = document.createElement('div');
-        newDiv.classList.add('grid-item');
-        newDiv.innerHTML = `
-          <a href="#" class="show-popup" data-subscription-id="${rec.id}">
-            <img src="${subscriptionImage}" loading="lazy" alt="">
-          </a>
-        `;
-        recommendationsDiv.appendChild(newDiv);
-      });
-  
-      // Call setupEventListeners after displaying the recommendations
-      setupEventListeners();
-    }
-  
-    
-    
-    
-    
-    function getSubscriptionImageById(id) {
-      const subscription = subscriptions.find(sub => sub.id === id);
-      return subscription ? subscription.image : '';
-    }
-    
-    // Fetch subscriptions and recommendations, and then display recommendations
-    Promise.all([fetchSubscriptions(), fetchRecommendations()])
-    .then(() => {
-      displayRecommendations();
+      return sortedSimilarSubs;
     })
     .catch((error) => {
       console.error(error);
       alert(error.message);
     });
+  }
+  
+  function displaySimilarSubs(similarSubscriptionIds) {
+    const subscriptionSuggestionsDiv = document.getElementById("subscription_suggestions");
+    subscriptionSuggestionsDiv.innerHTML = '';
+  
+    similarSubscriptionIds.forEach((subscriptionId) => {
+      const subscriptionImage = getSubscriptionImageById(subscriptionId);
+  
+      const newDiv = document.createElement('div');
+      newDiv.classList.add('grid-item');
+      newDiv.innerHTML = `
+        <a href="#" class="show-popup" data-subscription-id="${subscriptionId}">
+          <img src="${subscriptionImage}" loading="lazy" alt="">
+        </a>
+      `;
+      subscriptionSuggestionsDiv.appendChild(newDiv);
+    });
+  
+    // Call setupEventListeners after displaying the subscription suggestions
+    setupEventListeners();
+  }
+  
+  
+  
+
+
+
+  
+
+
+  
+    
+    
+    
+    
+function getSubscriptionImageById(id) {
+  const subscription = subscriptions.find(sub => sub.id === id);
+  return subscription ? subscription.image : '';
+}
+
+  
+// Fetch subscriptions, recommendations, and user suggestions, and then display them
+Promise.all([fetchSubscriptions(), fetchRecommendations(), fetchUserSuggestions(), fetchSimilarSubs()])
+  .then(([_, __, userSuggestions, similarSubscriptionIds]) => {
+    displayRecommendations();
+    displayUserSuggestions(userSuggestions);
+    displaySimilarSubs(similarSubscriptionIds);
+  })
+  .catch((error) => {
+    console.error(error);
+    alert(error.message);
+  });
 });
+
+
 
