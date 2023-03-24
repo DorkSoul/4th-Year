@@ -177,15 +177,24 @@ fetch('/add-subscription', {
       subNoteInput.value = '';
 
       alert('Subscription added successfully');
+    } else if (response.status === 400) {
+      // Handle the "Subscription already exists" error
+      return response.json();
     } else {
       throw new Error('Subscription creation failed');
     }
   })
-  .catch((error) => {
+  .then((data) => {
+    if (data && data.error) {
+      alert(data.error);
+    }
+  })
+  .catch
+  ((error) => {
     console.error(error);
     alert(error.message);
-  });
-});
+    });
+    });
 
 
 

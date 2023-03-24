@@ -257,21 +257,40 @@ app.post("/sub_subs", async (req, res) => {
 app.post("/add-subscription", async (req, res) => {
   const { user_id, sub_id, cost, start_date, recurring_length, sort_group, user_notes } = req.body;
 
-  const query = `
-    INSERT INTO user_subs (user_id, sub_id, cost, start_date, recurring_length, alert_id, sort_group, user_notes, cancelled, rating)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
+  const checkQuery = `
+    SELECT * FROM user_subs WHERE user_id = $1 AND sub_id = $2;
   `;
 
-  const params = [user_id, sub_id, cost, start_date, recurring_length, 1, sort_group, user_notes, false, 0];
+  const checkParams = [user_id, sub_id];
 
   try {
-    await client.query(query, params);
-    res.status(201).json({ message: "Subscription added successfully" });
+    const checkResult = await client.query(checkQuery, checkParams);
+
+    if (checkResult.rowCount > 0) {
+      res.status(400).json({ error: "Subscription already exists for this user" });
+      return;
+    }
+
+    const insertQuery = `
+      INSERT INTO user_subs (user_id, sub_id, cost, start_date, recurring_length, alert_id, sort_group, user_notes, cancelled, rating)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
+    `;
+
+    const insertParams = [user_id, sub_id, cost, start_date, recurring_length, 1, sort_group, user_notes, false, 0];
+
+    try {
+      await client.query(insertQuery, insertParams);
+      res.status(201).json({ message: "Subscription added successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Subscription creation failed" });
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Subscription creation failed" });
-  }
-});
+    res.status(500).json({ error: "Error checking for existing subscription" });
+    }
+    });    
+
 
 
 
