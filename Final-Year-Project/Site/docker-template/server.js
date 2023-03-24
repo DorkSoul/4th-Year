@@ -155,40 +155,6 @@ app.post('/user_session', async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-// format from https://dirask.com/posts/Node-js-PostgreSQL-Insert-query-DZXq2j
-
-const insertSub = async (name, company, website, category, image, description) => {
-  try {           // gets connection
-      await client.query(
-          `INSERT INTO "subscriptions" ("name", "company", "website", "category", "image", "description")  
-           VALUES ($1, $2, $3, $4, $5, $6)`, [name, company, website, category, image, description]); // sends queries
-      return true;
-  } catch (error) {
-      console.error(error.stack);
-      return false;
-  }
-};
-
-app.get("/add_subscriptions", async (req, res) => 
-{insertSub('Added Subscription', 'Generic Company', 'www.test.com', 'Testing', 'Image url here', 'This is an added subscription for testing purposes')
-.then(result => {
-  if (result) {
-      console.log('Subscription inserted');
-      res.setHeader("Content-Type", "application/json");
-      res.status(200);
-      res.send(JSON.stringify(result));
-  }
-})});
-
 app.post("/recommendations", async (req, res) => {
   const { userId } = req.body;
 
@@ -287,6 +253,26 @@ app.post("/sub_subs", async (req, res) => {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
+
+app.post("/add-subscription", async (req, res) => {
+  const { user_id, sub_id, cost, start_date, recurring_length, sort_group, user_notes } = req.body;
+
+  const query = `
+    INSERT INTO user_subs (user_id, sub_id, cost, start_date, recurring_length, alert_id, sort_group, user_notes, cancelled, rating)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
+  `;
+
+  const params = [user_id, sub_id, cost, start_date, recurring_length, 1, sort_group, user_notes, false, 0];
+
+  try {
+    await client.query(query, params);
+    res.status(201).json({ message: "Subscription added successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Subscription creation failed" });
+  }
+});
+
 
 
 

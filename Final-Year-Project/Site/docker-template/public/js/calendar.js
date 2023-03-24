@@ -1,6 +1,7 @@
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
+const userId = localStorage.getItem("userId");
 
 const calendarMonthYear = document.getElementById("calendar-month-year");
 const prevMonthBtn = document.getElementById("prev-month");

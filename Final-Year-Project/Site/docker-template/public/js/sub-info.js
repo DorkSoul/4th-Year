@@ -9,6 +9,7 @@ if (!subId) {
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
+const userId = localStorage.getItem("userId");
 
 if (!sessionId) {
   // Redirect to login page

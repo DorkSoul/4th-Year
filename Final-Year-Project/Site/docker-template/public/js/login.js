@@ -1,3 +1,8 @@
+const sessionId = localStorage.getItem("sessionId");
+const username = localStorage.getItem("username");
+const password = localStorage.getItem("password");
+const userId = localStorage.getItem("userId");
+
 // Handle the login form submission
 const loginForm = document.getElementById('wf-form-Subscription-Form');
 loginForm.addEventListener('submit', (event) => {

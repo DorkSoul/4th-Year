@@ -1,6 +1,8 @@
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
+const userId = localStorage.getItem("userId");
+
 if (!sessionId) {
   // Redirect to login page
   window.location.href = "/login.html";
@@ -58,6 +60,8 @@ fetch("/subscriptions", {
       const costLabel = document.createElement('div');
       costLabel.classList.add('text-block');
       costLabel.textContent = 'Cost';
+      costLabel.style.backgroundColor = '#0096ff';
+      costLabel.style.marginBottom = '10px';
       subCost.appendChild(costLabel);
       const costValue = document.createElement('div');
       costValue.classList.add('text-block');
@@ -70,6 +74,8 @@ fetch("/subscriptions", {
       const renewLabel = document.createElement('div');
       renewLabel.classList.add('text-block-2');
       renewLabel.textContent = 'Start Date';
+      renewLabel.style.backgroundColor = '#0096ff';
+      renewLabel.style.marginBottom = '10px';
       subRenew.appendChild(renewLabel);
       const renewValue = document.createElement('div');
       renewValue.classList.add('text-block-2');
@@ -84,6 +90,8 @@ fetch("/subscriptions", {
       const startLabel = document.createElement('div');
       startLabel.classList.add('text-block-3');
       startLabel.textContent = 'sort group';
+      startLabel.style.backgroundColor = '#0096ff';
+      startLabel.style.marginBottom = '10px';
       subStart.appendChild(startLabel);
       const startValue = document.createElement('div');
       startValue.classList.add('text-block-3');
@@ -96,6 +104,8 @@ fetch("/subscriptions", {
       const totalLabel = document.createElement('div');
       totalLabel.classList.add('text-block-4');
       totalLabel.textContent = 'recurring length';
+      totalLabel.style.backgroundColor = '#0096ff';
+      totalLabel.style.marginBottom = '10px';
       subTotal.appendChild(totalLabel);
       const totalValue = document.createElement('div');
       totalValue.classList.add('text-block-4');
