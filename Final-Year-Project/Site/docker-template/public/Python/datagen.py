@@ -29,7 +29,6 @@ def generate_user_data():
             f"last{i + 1}",
             f"user{i + 1}@example.com",
             phone_number,
-            random.randint(0, 99999),
             currency,
             time_zone,
             age,
@@ -86,7 +85,7 @@ def write_csv(filename, data, header=None):
 
 users, logins, subs = generate_user_data()
 
-user_header = ["first_name", "last_name", "email", "phone_number", "account_number", "currency", "time_zone", "age", "gender", "address", "country"]
+user_header = ["first_name", "last_name", "email", "phone_number", "currency", "time_zone", "age", "gender", "address", "country"]
 write_csv("users.csv", users, user_header)
 
 login_header = ["user_id", "username", "password"]

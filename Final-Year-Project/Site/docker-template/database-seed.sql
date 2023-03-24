@@ -10,7 +10,6 @@ CREATE TABLE "users" (
     "last_name" varchar,
     "email" varchar,
     "phone_number" int,
-    "account_number" int,
     "currency" varchar,
     "time_zone" numeric,
     "age" numeric,
@@ -177,17 +176,8 @@ INSERT INTO subscriptions(name, company, website, category, image, description, 
     ('Wild And Game', 'Wild And Game', 'www.wildandgame.co.uk', 'food', 'https://i.imgur.com/aSUoCse.png', 'Wild And Game',0),
     ('Hello Fresh', 'Hello Fresh', 'www.hellofresh.ie', 'food', 'https://i.imgur.com/MRBrKyH.png', 'Hello Fresh',0);
 
--- INSERT INTO users (first_name, last_name, email, phone_number, account_number, currency, time_zone, age, gender, address, country) VALUES
---     ('Luke', 'Hallinan', 'test@test.com', '0125456321', '12345', 'euro', '0', '27', 'male', '21 normal street', 'Ireland');
-
--- INSERT INTO user_login (id, username, password) VALUES 
---     ('1', 'luke', 'password');
 
 INSERT INTO "alarms" (id, date, time, alert_method) VALUES
     ('1', '10-10-2022', '10:00:00', 'email');
 
--- INSERT INTO user_subs (user_id, sub_id, cost, start_date, recurring_length, alert_id, sort_group, user_notes, cancelled) VALUES
---     ('1', '1', '10.00', '8-8-2020', 'monthly', '1', 'tv', 'none', 'false'),
---     ('1', '2', '15.00', '6-6-2021', 'monthly', '1', 'music', 'none', 'false'),
---     ('1', '5', '7.00', '1-1-2022', 'monthly', '1', 'games', 'none', 'false');
 

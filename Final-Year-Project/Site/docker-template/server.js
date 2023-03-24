@@ -406,20 +406,20 @@ const importUserData = async (client) => {
     fs.createReadStream(usersCsvPath)
       .pipe(csv())
       .on('data', (row) => {
-        const { id, first_name, last_name, email, phone_number, account_number, currency, time_zone, age, gender, address, country } = row;
-        usersData.push([id, first_name, last_name, email, phone_number, account_number, currency, time_zone, age, gender, address, country]);
+        const { id, first_name, last_name, email, phone_number, currency, time_zone, age, gender, address, country } = row;
+        usersData.push([id, first_name, last_name, email, phone_number, currency, time_zone, age, gender, address, country]);
       })
       .on('end', async () => {
         // Insert data into "users" table and store the generated IDs
         const userIds = [];
         for (let i = 0; i < usersData.length; i++) {
-          const [id, firstName, lastName, email, phoneNumber, accountNumber, currency, timeZone, age, gender, address, country] = usersData[i];
+          const [id, firstName, lastName, email, phoneNumber, currency, timeZone, age, gender, address, country] = usersData[i];
           try {
             const result = await client.query(
-              `INSERT INTO "users" ("first_name", "last_name", "email", "phone_number", "account_number", "currency", "time_zone", "age", "gender", "address", "country")
-               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+              `INSERT INTO "users" ("first_name", "last_name", "email", "phone_number", "currency", "time_zone", "age", "gender", "address", "country")
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                RETURNING "id"`,
-              [firstName, lastName, email, phoneNumber, accountNumber, currency, timeZone, age, gender, address, country]
+              [firstName, lastName, email, phoneNumber, currency, timeZone, age, gender, address, country]
             );
             userIds.push(result.rows[0].id);
           } catch (error) {
