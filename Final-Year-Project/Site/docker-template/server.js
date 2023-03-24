@@ -109,12 +109,21 @@ app.post('/login', async (req, res) => {
     // Check if a user was found
     if (result.rows.length > 0) {
       const userId = result.rows[0].id;
-      const sessionId = req.sessionID;
 
-      // Insert the session ID into the user_sessions table
-      await client.query('INSERT INTO user_sessions (id) VALUES ($1)', [sessionId]);
+      // Regenerate the session ID
+      req.session.regenerate(async (err) => {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ error: 'An error occurred' });
+        } else {
+          const sessionId = req.sessionID;
 
-      res.json({ success: true, sessionId: sessionId, userId: userId });
+          // Insert the session ID into the user_sessions table
+          await client.query('INSERT INTO user_sessions (id) VALUES ($1)', [sessionId]);
+
+          res.json({ success: true, sessionId: sessionId, userId: userId });
+        }
+      });
     } else {
       // Send an error response if no user was found
       res.status(401).json({ error: 'Invalid username or password' });
@@ -124,6 +133,8 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
+
+
 
 app.post('/user_session', async (req, res) => {
   const { sessionId } = req.body;
