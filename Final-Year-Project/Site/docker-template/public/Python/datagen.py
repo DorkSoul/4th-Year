@@ -15,7 +15,7 @@ def generate_user_data():
     # Create a list of all possible subscription ids
     sub_ids = list(range(1, 41))
 
-    for i in range(2000):
+    for i in range(10000):
         phone_number = f"086{str(random.randint(0, 9999999)).zfill(7)}"
         currency = random.choice(['euro', 'dollar', 'pound'])
         time_zone = random.randint(-12, 11)

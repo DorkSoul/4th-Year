@@ -206,7 +206,7 @@ for similar in sorted_similar_users:
 similar_users_df['user_id'] = IDs
 similar_users_df["similarity_score"] = sim_score
 #print("similar_users_df:")
-#print(similar_users_df)
+#print(similar_users_df)    
 
 ratings = ratings[['user_id', 'sub_id', 'rating']]
 # print(ratings)
@@ -246,7 +246,7 @@ def subscription_lists():
     
     seen_subscriptions = []
     subscriptions = []
-    for i in range(15):
+    for i in range(10):
         seen_subscriptions.append(user_seen_subscriptions(similar_users_df.user_id[i]))
 
     #print("seen subscriptions list: ", seen_subscriptions)

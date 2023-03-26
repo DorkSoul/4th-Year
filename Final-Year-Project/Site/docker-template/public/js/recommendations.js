@@ -85,6 +85,20 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     togglePopup();
   });
+
+  function fetchUserSubs() {
+    return fetch("/subscriptions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    })
+      .then((response) => response.json())
+      .catch((error) => {
+        console.error(error);
+        alert(error.message);
+      });
+  }
+  
   
   function fetchSubscriptions() {
     return fetch('/all-subscriptions')
@@ -151,25 +165,32 @@ document.addEventListener("DOMContentLoaded", function () {
           id: parseInt(key.substring(4)), // Remove "sub_" and convert the remaining string to an integer
           rating: parseFloat(value),
         }));
-
+  
         // Sort the array by size from biggest to smallest
         recommendations = recommendationArray.sort((a, b) => b.rating - a.rating);
         console.log(recommendations);
-
+        return recommendations;
       })
       .catch((error) => {
         console.error(error);
         alert(error.message);
       });
   }
+  
 
-  function displayRecommendations() {
+  function displayRecommendations(userSubscriptions) {
     recommendationsDiv.innerHTML = '';
-
-    const topRecommendations = recommendations.slice(0, 5);
+  
+    // Filter out subscriptions the user already has
+    const filteredRecommendations = recommendations.filter(
+      (rec) => !userSubscriptions.some((userSub) => userSub.id === rec.id)
+    );
+  
+    // Display only the top 5 filtered recommendations
+    const topRecommendations = filteredRecommendations.slice(0, 5);
     topRecommendations.forEach((rec) => {
       const subscriptionImage = getSubscriptionImageById(rec.id);
-
+  
       const newDiv = document.createElement('div');
       newDiv.classList.add('grid-item');
       newDiv.innerHTML = `
@@ -179,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
       recommendationsDiv.appendChild(newDiv);
     });
-
+  
     // Call setupEventListeners after displaying the recommendations
     // setupEventListeners();
   }
@@ -282,17 +303,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
   
-  function displaySimilarSubs(similarSubscriptionIds) {
+  function displaySimilarSubs(similarSubscriptionIds, userSubscriptions) {
     const subscriptionSuggestionsDiv = document.getElementById("subscription_suggestions");
     subscriptionSuggestionsDiv.innerHTML = '';
   
-    similarSubscriptionIds.forEach((subscriptionId) => {
-      const subscriptionImage = getSubscriptionImageById(subscriptionId);
+    // Filter out subscriptions the user already has
+    const filteredSubscriptions = subscriptions.filter(
+      (sub) => !userSubscriptions.some((userSub) => userSub.id === sub.id)
+    );
+  
+    // Sort the filtered subscriptions by the number of times they appear in the similarSubscriptionIds array
+    const sortedSubscriptions = filteredSubscriptions.sort((a, b) => {
+      const countA = similarSubscriptionIds.filter((id) => id === a.id).length;
+      const countB = similarSubscriptionIds.filter((id) => id === b.id).length;
+      return countB - countA;
+    });
+  
+    // Display only the top 5 filtered subscriptions
+    const topSubscriptions = sortedSubscriptions.slice(0, 5);
+    topSubscriptions.forEach((sub) => {
+      const subscriptionImage = sub.image;
   
       const newDiv = document.createElement('div');
       newDiv.classList.add('grid-item');
       newDiv.innerHTML = `
-        <a href="#" class="show-popup" data-subscription-id="${subscriptionId}">
+        <a href="#" class="show-popup" data-subscription-id="${sub.id}">
           <img src="${subscriptionImage}" loading="lazy" alt="">
         </a>
       `;
@@ -302,6 +337,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Call setupEventListeners after displaying the subscription suggestions
     // setupEventListeners();
   }
+  
+  
   
   
   
@@ -328,19 +365,22 @@ Promise.all([
   fetchRecommendations(),
   fetchUserSuggestions(),
   fetchSimilarSubs(),
-])
-  .then(([_subscriptions, _, userSuggestions, similarSubscriptionIds]) => {
-    subscriptions = _subscriptions;
-    displayRecommendations();
-    displayUserSuggestions(userSuggestions);
-    displaySimilarSubs(similarSubscriptionIds);
-    setupEventListeners();
+  fetchUserSubs(),
+  ])
+  .then(([_subscriptions, _recommendations, userSuggestions, similarSubscriptionIds, userSubscriptions]) => {
+  subscriptions = _subscriptions;
+  recommendations = _recommendations;
+  displayRecommendations(userSubscriptions);
+  displayUserSuggestions(userSuggestions);
+  displaySimilarSubs(similarSubscriptionIds, userSubscriptions); // Pass userSubscriptions to displaySimilarSubs
+  setupEventListeners();
   })
   .catch((error) => {
-    console.error(error);
-    alert(error.message);
+  console.error(error);
+  alert(error.message);
   });
-});
+  });
+
 
 // Check if the user is logged in and update the login-logout button accordingly
 function updateLoginLogoutButton() {

@@ -170,7 +170,7 @@ def subscription_lists():
     subscription_lists = []
     subscriptions_in_all = []
     
-    for i in range(4):
+    for i in range(5):
         subscription_lists.append(similar_subscriptions(subscribed[i]))
         #print("subscription_lists0: \n", subscription_lists)
 
@@ -207,12 +207,34 @@ def subscription_lists():
     return final_list  
 
 def recommend():
+    subscribed = user_subscriptions(1)  # You can replace '1' with the desired user_id
+    subscribed_indices = [get_index_from_name(sub) for sub in subscribed]
 
-    subscriptions = subscription_lists()
-    print("\nsubscription Recomendations:")
-    print("\n".join(map(str,subscriptions)))
-    subscriptions_df_format = pd.DataFrame(subscriptions)
-    subscriptions_df_format.to_csv("list2.csv")
+    # Find similar subscriptions for all subscribed subscriptions and store them in a list
+    all_similar_subscriptions = []
+    for sub in subscribed:
+        all_similar_subscriptions.extend(similar_subscriptions(sub))
+
+    # Count the occurrences of each similar subscription
+    subscription_counts = {}
+    for sub in all_similar_subscriptions:
+        if sub not in subscribed:  # Exclude already subscribed subscriptions
+            if sub in subscription_counts:
+                subscription_counts[sub] += 1
+            else:
+                subscription_counts[sub] = 1
+
+    # Sort the subscriptions based on their occurrence counts
+    sorted_subscriptions = sorted(subscription_counts.items(), key=lambda x: x[1], reverse=True)
+
+    # Get the top 5 subscriptions
+    top_5_subscriptions = [sub[0] for sub in sorted_subscriptions[:5]]
+    print("\nSubscription Recommendations:")
+    print("\n".join(map(str, top_5_subscriptions)))
+
+    # Save the top 5 subscriptions to a CSV file
+    top_5_subscriptions_df = pd.DataFrame(top_5_subscriptions, columns=['subscription'])
+    top_5_subscriptions_df.to_csv("list2.csv", index=False)
     
 recommend()
 

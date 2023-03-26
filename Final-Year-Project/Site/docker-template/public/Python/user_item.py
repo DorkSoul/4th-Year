@@ -236,6 +236,6 @@ final_recom_list = get_sub_name_from_movieid()
 print(final_recom_list)
 
 recom_list = pd.DataFrame(final_recom_list)
-# recom_list.to_csv("userXitem.csv")
+# recom_list.to_csv("recom_list.csv")
     
 
