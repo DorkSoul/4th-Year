@@ -31,9 +31,6 @@
                 <a href="calendar.html" class="nav-link">Calendar</a>
               </li>
               <li>
-                <a href="account.html" class="nav-link">Account</a>
-              </li>
-              <li>
                 <a href="recommendations.html" class="nav-link">Recommendations</a>
               </li>
               <li>
@@ -54,41 +51,68 @@
     </div>
     <div class="sub_details">
       <div class="register_form w-form">
-        <form id="wf-form-Subscription-Form" name="wf-form-Subscription-Form" data-name="Subscription Form" method="get" class="form"><label for="user_username-2" class="sub_data_text">Username</label><input type="text" class="sub_data_field w-input" maxlength="256" name="user_username" data-name="user_username" placeholder="John Smith" id="user_username-2" required=""><label for="user_password" class="sub_data_text">Password</label><input type="password" class="sub_data_field w-input" maxlength="256" name="user_password" data-name="user_password" placeholder="********" id="user_password" required=""><label for="user_first-2" class="sub_data_text">First Name</label><input type="text" class="sub_data_field w-input" maxlength="256" name="user_first" data-name="user_first" placeholder="John" id="user_first-2"><label for="user_second-2" class="sub_data_text">Last Name</label><input type="text" class="sub_data_field w-input" maxlength="256" name="user_second" data-name="user_second" placeholder="Smith" id="user_second-2" required=""><label for="user_num-2" class="sub_data_text">Phone Number</label><input type="tel" class="sub_data_field w-input" maxlength="256" name="user_num" data-name="user_num" placeholder="0458625475" id="user_num-2" required=""><label for="user_cur-2" class="sub_data_text">Currency</label><select id="user_cur-2" name="user_cur" data-name="user_cur" required="" class="sub_data_drop w-node-bac05c9f-a95b-6c2e-e1ed-86fe2c257dfb-b9ecb239 w-select">
-            <option value="First">Euro</option>
-            <option value="Second">Dollar</option>
-            <option value="Third">Pounds</option>
-            <option value="Another option">Yen</option>
-          </select><label for="user_time-2" class="sub_data_text">Timezone</label><select id="user_time-2" name="user_time" data-name="user_time" required="" class="sub_data_drop w-node-bac05c9f-a95b-6c2e-e1ed-86fe2c257dfe-b9ecb239 w-select">
-            <option value="First">+00:00</option>
-            <option value="Second">+01:00</option>
-            <option value="Third">+02:00</option>
-            <option value="Another option">+03:00</option>
-            <option value="Another option">+04:00</option>
-            <option value="Another option">+05:00</option>
-            <option value="Another option">+06:00</option>
-            <option value="Another option">+07:00</option>
-            <option value="Another option">+08:00</option>
-            <option value="Another option">+09:00</option>
-            <option value="Another option">+10:00</option>
-            <option value="Another option">+11:00</option>
-            <option value="Another option">+12:00</option>
-            <option value="Another option">-12:00</option>
-            <option value="Another option">-11:00</option>
-            <option value="Another option">-10:00</option>
-            <option value="Another option">-09:00</option>
-            <option value="Another option">-08:00</option>
-            <option value="Another option">-07:00</option>
-            <option value="Another option">-06:00</option>
-            <option value="Another option">-05:00</option>
-            <option value="Another option">-04:00</option>
-            <option value="Another option">-03:00</option>
-            <option value="Another option">-02:00</option>
-            <option value="Another option">-01:00</option>
-          </select><label for="user_email-2" class="sub_data_text">Email</label><input type="email" class="sub_data_field w-input" maxlength="256" name="user_email" data-name="user_email" placeholder="John_Smith@randomemail.com" id="user_email-2" required=""><label for="user_age-2" class="sub_data_text">Age</label><input type="text" class="sub_data_field w-input" maxlength="256" name="user_age" data-name="user_age" placeholder="Age" id="user_age-2" required=""><label for="user_gender-2" class="sub_data_text">Gender</label><select id="user_gender-2" name="user_gender" data-name="user_gender" required="" class="sub_data_drop w-node-_2fda3171-836c-f986-2c1c-a0287d075402-b9ecb239 w-select">
-            <option value="First">Male</option>
-            <option value="Second">Female</option>
-          </select><label for="user_address-2" class="sub_data_text">Address</label><input type="text" class="sub_data_field w-input" maxlength="256" name="user_address" data-name="user_address" placeholder="123 Normal Road" id="user_address-2" required=""><label for="user_country-2" class="sub_data_text">Country</label><input type="text" class="sub_data_field w-input" maxlength="256" name="user_country" data-name="user_country" placeholder="Ireland" id="user_country-2" required=""><input type="submit" value="Register" data-wait="Please wait..." id="update_account" class="w-button"></form>
+        <form id="wf-form-Subscription-Form" name="wf-form-Subscription-Form" data-name="Registration Form" method="POST" action="/register" class="form">
+          <label for="user_username-2" class="sub_data_text">Username</label>
+          <input type="text" class="sub_data_field w-input" maxlength="256" name="user_username" data-name="user_username" placeholder="John Smith" id="user_username-2" required="">
+          <label for="user_password" class="sub_data_text">Password</label>
+          <input type="password" class="sub_data_field w-input" maxlength="256" name="user_password" data-name="user_password" placeholder="********" id="user_password" required="">
+          <label for="user_first-2" class="sub_data_text">First Name</label>
+          <input type="text" class="sub_data_field w-input" maxlength="256" name="user_first" data-name="user_first" placeholder="John" id="user_first-2">
+          <label for="user_second-2" class="sub_data_text">Last Name</label>
+          <input type="text" class="sub_data_field w-input" maxlength="256" name="user_second" data-name="user_second" placeholder="Smith" id="user_second-2" required="">
+          <label for="user_num-2" class="sub_data_text">Phone Number</label>
+          <input type="tel" class="sub_data_field w-input" maxlength="256" name="user_num" data-name="user_num" placeholder="0458625475" id="user_num-2" required="">
+          
+          <label for="user_cur-2" class="sub_data_text">Currency</label>
+          <select id="user_cur-2" name="user_cur" data-name="user_cur" required="" class="sub_data_drop w-node-_23ce45bb-601e-2349-0150-7f1508ddbc74-16e5e8df w-select">
+            <option value="Euro">Euro</option>
+            <option value="Dollar">Dollar</option>
+            <option value="Pounds">Pounds</option>
+            <option value="Yen">Yen</option>
+          </select>
+          <label for="user_time-2" class="sub_data_text">Timezone</label>
+          <select id="user_time-2" name="user_time" data-name="user_time" required="" class="sub_data_drop w-node-_23ce45bb-601e-2349-0150-7f1508ddbc77-16e5e8df w-select">
+            <option value=0>+00:00</option>
+            <option value=1>+01:00</option>
+            <option value=2>+02:00</option>
+            <option value=3>+03:00</option>
+            <option value=4>+04:00</option>
+            <option value=5>+05:00</option>
+            <option value=6>+06:00</option>
+            <option value=7>+07:00</option>
+            <option value=8>+08:00</option>
+            <option value=9>+09:00</option>
+            <option value=10>+10:00</option>
+            <option value=11>+11:00</option>
+            <option value=12>+12:00</option>
+            <option value=-12>-12:00</option>
+            <option value=-11>-11:00</option>
+            <option value=-10>-10:00</option>
+            <option value=-9>-09:00</option>
+            <option value=-8>-08:00</option>
+            <option value=-7>-07:00</option>
+            <option value=-6>-06:00</option>
+            <option value=-5>-05:00</option>
+            <option value=-4>-04:00</option>
+            <option value=-3>-03:00</option>
+            <option value=-2>-02:00</option>
+            <option value=-1>-01:00</option>
+          </select>
+          <label for="user_email-2" class="sub_data_text">Email</label>
+          <input type="email" class="sub_data_field w-input" maxlength="256" name="user_email" data-name="user_email" placeholder="John_Smith@randomemail.com" id="user_email-2" required="">
+          <label for="user_age-2" class="sub_data_text">Age</label>
+          <input type="text" class="sub_data_field w-input" maxlength="256" name="user_age" data-name="user_age" placeholder="Age" id="user_age-2" required="">
+          <label for="user_gender-2" class="sub_data_text">Gender</label>
+          <select id="user_gender-2" name="user_gender" data-name="user_gender" required="" class="sub_data_drop w-node-_23ce45bb-601e-2349-0150-7f1508ddbc80-16e5e8df w-select">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          <label for="user_address-2" class="sub_data_text">Address</label>
+          <input type="text" class="sub_data_field w-input" maxlength="256" name="user_address" data-name="user_address" placeholder="123 Normal Road" id="user_address-2" required="">
+          <label for="user_country-2" class="sub_data_text">Country</label>
+          <input type="text" class="sub_data_field w-input" maxlength="256" name="user_country" data-name="user_country" placeholder="Ireland" id="user_country-2" required="">
+          <input type="submit" value="Register" data-wait="Please wait..." id="update_account" class="w-button">
+        </form>
         <div class="w-form-done">
           <div>Thank you! Your submission has been received!</div>
         </div>
@@ -98,5 +122,6 @@
       </div>
     </div>
   </main>
+  <script src="js/register.js" type="text/javascript" defer></script>
 </body>
 </html>

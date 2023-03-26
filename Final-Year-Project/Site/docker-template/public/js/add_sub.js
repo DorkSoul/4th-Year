@@ -190,11 +190,11 @@ fetch('/add-subscription', {
     }
   })
   .catch
-  ((error) => {
-    console.error(error);
-    alert(error.message);
-    });
-    });
+((error) => {
+console.error(error);
+alert(error.message);
+});
+});
 
 
 
