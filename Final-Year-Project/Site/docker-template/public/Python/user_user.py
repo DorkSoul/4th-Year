@@ -246,7 +246,7 @@ def subscription_lists():
     
     seen_subscriptions = []
     subscriptions = []
-    for i in range(10):
+    for i in range(15):
         seen_subscriptions.append(user_seen_subscriptions(similar_users_df.user_id[i]))
 
     #print("seen subscriptions list: ", seen_subscriptions)

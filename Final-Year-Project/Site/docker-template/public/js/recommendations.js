@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
         imageElements.forEach(img => {
           img.parentNode.classList.add('show-popup');
         });
-  
+        return data;
       })
       .catch((error) => {
         console.error(error);
@@ -121,13 +121,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function setupEventListeners() {
     var showPopupButtons = document.querySelectorAll(".show-popup");
-
+  
     showPopupButtons.forEach(function (button) {
       button.addEventListener("click", function (e) {
         e.preventDefault();
         const subscriptionId = parseInt(button.dataset.subscriptionId);
         const subscription = getSubscriptionById(subscriptionId);
-
+  
         if (subscription) {
           fillStatsPopup(subscription);
           togglePopup();
@@ -135,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   }
+  
   
 
   function fetchRecommendations() {
@@ -180,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Call setupEventListeners after displaying the recommendations
-    setupEventListeners();
+    // setupEventListeners();
   }
 
     
@@ -210,10 +211,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function displayUserSuggestions(subscriptionIds) {
     userSuggestionsDiv.innerHTML = '';
-
+  
     subscriptionIds.forEach((subscriptionId) => {
       const subscriptionImage = getSubscriptionImageById(subscriptionId);
-
+  
       const newDiv = document.createElement('div');
       newDiv.classList.add('grid-item');
       newDiv.innerHTML = `
@@ -223,10 +224,11 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
       userSuggestionsDiv.appendChild(newDiv);
     });
-
+  
     // Call setupEventListeners after displaying the user suggestions
-    setupEventListeners();
+    // setupEventListeners();
   }
+  
 
   function fetchSimilarSubs() {
     return fetch("/subscriptions", {
@@ -298,7 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   
     // Call setupEventListeners after displaying the subscription suggestions
-    setupEventListeners();
+    // setupEventListeners();
   }
   
   
@@ -321,11 +323,18 @@ function getSubscriptionImageById(id) {
 
   
 // Fetch subscriptions, recommendations, and user suggestions, and then display them
-Promise.all([fetchSubscriptions(), fetchRecommendations(), fetchUserSuggestions(), fetchSimilarSubs()])
-  .then(([_, __, userSuggestions, similarSubscriptionIds]) => {
+Promise.all([
+  fetchSubscriptions(),
+  fetchRecommendations(),
+  fetchUserSuggestions(),
+  fetchSimilarSubs(),
+])
+  .then(([_subscriptions, _, userSuggestions, similarSubscriptionIds]) => {
+    subscriptions = _subscriptions;
     displayRecommendations();
     displayUserSuggestions(userSuggestions);
     displaySimilarSubs(similarSubscriptionIds);
+    setupEventListeners();
   })
   .catch((error) => {
     console.error(error);

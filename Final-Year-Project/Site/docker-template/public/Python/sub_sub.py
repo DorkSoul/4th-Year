@@ -170,7 +170,7 @@ def subscription_lists():
     subscription_lists = []
     subscriptions_in_all = []
     
-    for i in range(5):
+    for i in range(4):
         subscription_lists.append(similar_subscriptions(subscribed[i]))
         #print("subscription_lists0: \n", subscription_lists)
 

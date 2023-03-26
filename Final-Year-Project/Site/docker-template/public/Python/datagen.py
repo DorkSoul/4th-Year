@@ -41,22 +41,47 @@ def generate_user_data():
 
         # Shuffle the list of possible subscription ids
         random.shuffle(sub_ids)
+
         # Select a random number of subscriptions between 1 and 9
-        sub_count = random.randint(1, min(len(sub_ids), 9))
+        sub_count = random.randint(1, min(len(sub_ids), 8))
         assigned_subs = sub_ids[:sub_count]
 
+        # Choose a majority group for the user
+        majority_group = random.choice([
+            range(1, 11),
+            range(11, 21),
+            range(21, 31),
+            range(31, 36),
+            range(36, 41)
+        ])
+
+        # Assign the majority of subscriptions to the user from the chosen group
+        majority_subs = random.sample(majority_group, sub_count // 2)
+        assigned_subs = majority_subs + assigned_subs[len(majority_subs):]
+
         for j, sub_id in enumerate(assigned_subs):
-            cost = random.randint(1, 30)
-            start_date = f"2021-{random.randint(1, 12)}-{random.randint(1, 28)}"
+            cost = random.randint(1, 20)
+            start_date = f"2021-{random.randint(1, 12)}-{random.randint(1,28)}"
             recurring_length = random.choice(['monthly', 'monthly'])
             alert_id = 1
-            sort_group = random.choices(
-                ['tv and movies', 'music', 'games', 'books', 'food'],
-                [10, 10, 10, 5, 5]
-            )[0]
+            # Assign sort_group based on sub_id
+            if sub_id in range(1, 11):
+                sort_group = 'tv and movies'
+            elif sub_id in range(11, 21):
+                sort_group = 'music'
+            elif sub_id in range(21, 31):
+                sort_group = 'games'
+            elif sub_id in range(31, 36):
+                sort_group = 'books'
+            else:
+                sort_group = 'food'
             user_notes = f"This is a note for user {i + 1} subscription {j + 1}."
             cancelled = random.choice([False, False])
-            rating = random.randint(1, 5)
+                    # Adjust the rating distribution
+            rating = random.choices(
+                [1, 2, 3, 4, 5],
+                [5, 10, 25, 30, 30]
+            )[0]
 
             subs.append([
                 i + 1,
@@ -70,7 +95,6 @@ def generate_user_data():
                 cancelled,
                 rating,
             ])
-
     return users, logins, subs
 
 
