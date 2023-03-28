@@ -1,4 +1,4 @@
-// some code refcrenced from https://dev.to/alexeagleson/docker-for-javascript-developers-41me
+// some code refrenced from https://dev.to/alexeagleson/docker-for-javascript-developers-41me
 // Import the postgres client
 const { Client } = require("pg");
 const express = require("express");
@@ -303,97 +303,97 @@ app.post("/add-subscription", async (req, res) => {
       console.error(error);
       res.status(500).json({ error: "Subscription creation failed" });
     }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Error checking for existing subscription" });
-      }
-  });    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error checking for existing subscription" });
+  }
+});
 
-  app.post("/register", async (req, res) => {
-    const {
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      currency,
-      time_zone,
-      age,
-      gender,
-      address,
-      country,
-      username,
-      password
-    } = req.body;
-  
-    // Check if the username already exists
-    const checkUsernameQuery = `
+app.post("/register", async (req, res) => {
+  const {
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    currency,
+    time_zone,
+    age,
+    gender,
+    address,
+    country,
+    username,
+    password
+  } = req.body;
+
+  // Check if the username already exists
+  const checkUsernameQuery = `
       SELECT * FROM user_login WHERE username = $1;
     `;
-    const checkUsernameParams = [username];
-  
-    // Check if the email already exists
-    const checkEmailQuery = `
+  const checkUsernameParams = [username];
+
+  // Check if the email already exists
+  const checkEmailQuery = `
       SELECT * FROM users WHERE email = $1;
     `;
-    const checkEmailParams = [email];
-  
-    try {
-      const checkUsernameResult = await client.query(checkUsernameQuery, checkUsernameParams);
-      const checkEmailResult = await client.query(checkEmailQuery, checkEmailParams);
-  
-      if (checkUsernameResult.rowCount > 0) {
-        res.status(400).json({ error: "Username already exists" });
-        return;
-      } else if (checkEmailResult.rowCount > 0) {
-        res.status(400).json({ error: "Email already in use" });
-        return;
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Error checking for existing user" });
-      }
-      
-      // Insert into users table
-      const insertUserQuery = `INSERT INTO users (first_name, last_name, email, phone_number, currency, time_zone, age, gender, address, country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id;` ;
-      const insertUserParams = [
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      currency,
-      time_zone,
-      age,
-      gender,
-      address,
-      country
-      ];
-      
-      try {
-      const userResult = await client.query(insertUserQuery, insertUserParams);
-      const userId = userResult.rows[0].id;
-      console.log(userId);
-      
-// Insert into user_login table
-const insertUserLoginQuery = `
+  const checkEmailParams = [email];
+
+  try {
+    const checkUsernameResult = await client.query(checkUsernameQuery, checkUsernameParams);
+    const checkEmailResult = await client.query(checkEmailQuery, checkEmailParams);
+
+    if (checkUsernameResult.rowCount > 0) {
+      res.status(400).json({ error: "Username already exists" });
+      return;
+    } else if (checkEmailResult.rowCount > 0) {
+      res.status(400).json({ error: "Email already in use" });
+      return;
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error checking for existing user" });
+  }
+
+  // Insert into users table
+  const insertUserQuery = `INSERT INTO users (first_name, last_name, email, phone_number, currency, time_zone, age, gender, address, country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id;`;
+  const insertUserParams = [
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    currency,
+    time_zone,
+    age,
+    gender,
+    address,
+    country
+  ];
+
+  try {
+    const userResult = await client.query(insertUserQuery, insertUserParams);
+    const userId = userResult.rows[0].id;
+    console.log(userId);
+
+    // Insert into user_login table
+    const insertUserLoginQuery = `
   INSERT INTO user_login (id, username, password)
   VALUES ($1, $2, $3);
 `;
 
-const insertUserLoginParams = [userId, username, password];
+    const insertUserLoginParams = [userId, username, password];
 
-try {
-  await client.query(insertUserLoginQuery, insertUserLoginParams);
-  res.status(201).json({ message: "User registered successfully", userId: userId });
-} catch (error) {
-console.error(error);
-res.status(500).json({ error: "User login creation failed" });
-}
-} catch (error) {
-console.error(error);
-res.status(500).json({ error: "User creation failed" });
-}
-});                  
-    
+    try {
+      await client.query(insertUserLoginQuery, insertUserLoginParams);
+      res.status(201).json({ message: "User registered successfully", userId: userId });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "User login creation failed" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "User creation failed" });
+  }
+});
+
 
 
 
@@ -531,7 +531,7 @@ const importUserData = async (client) => {
             userIds.push(result.rows[0].id);
           } catch (error) {
             console.error(error.stack);
-          }          
+          }
         }
 
         // Read user_login.csv file
@@ -571,30 +571,30 @@ const importUserData = async (client) => {
           })
           .on('end', async () => {
             // Insert data into "user_subs" table using the generated user IDs
-            for (let i = 0; i < userSubsData.length; i++){
-            const { user_id, sub_id, cost, start_date, recurring_length, alert_id, sort_group, user_notes, cancelled, rating } = userSubsData[i];
-            const userId = userIds[user_id - 1]; // Assuming user_id in user_subs.csv is 1-indexed
-            try {
-              await client.query(
-                `INSERT INTO "user_subs" ("user_id", "sub_id", "cost", "start_date", "recurring_length", "alert_id", "sort_group", "user_notes", "cancelled", "rating")
+            for (let i = 0; i < userSubsData.length; i++) {
+              const { user_id, sub_id, cost, start_date, recurring_length, alert_id, sort_group, user_notes, cancelled, rating } = userSubsData[i];
+              const userId = userIds[user_id - 1]; // Assuming user_id in user_subs.csv is 1-indexed
+              try {
+                await client.query(
+                  `INSERT INTO "user_subs" ("user_id", "sub_id", "cost", "start_date", "recurring_length", "alert_id", "sort_group", "user_notes", "cancelled", "rating")
                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-                [userId, sub_id, cost, start_date, recurring_length, alert_id, sort_group, user_notes, cancelled, rating]
-              );
-            } catch (error) {
-              console.error(error.stack);
+                  [userId, sub_id, cost, start_date, recurring_length, alert_id, sort_group, user_notes, cancelled, rating]
+                );
+              } catch (error) {
+                console.error(error.stack);
+              }
             }
-          }
-        })
-        .on('error', (error) => {
-          console.error(error.stack);
-        });
-    })
-    .on('error', (error) => {
-      console.error(error.stack);
-    });
-} catch (error) {
-  console.error(error.stack);
-}
+          })
+          .on('error', (error) => {
+            console.error(error.stack);
+          });
+      })
+      .on('error', (error) => {
+        console.error(error.stack);
+      });
+  } catch (error) {
+    console.error(error.stack);
+  }
 };
 
 const importRecommendationsData = async (client) => {

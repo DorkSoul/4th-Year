@@ -17,7 +17,7 @@ def generate_user_data():
 
     for i in range(10000):
         phone_number = f"086{str(random.randint(0, 9999999)).zfill(7)}"
-        currency = random.choice(['euro', 'dollar', 'pound'])
+        currency = random.choice(['Euro', 'Dollar', 'Pound'])
         time_zone = random.randint(-12, 11)
         age = random.randint(18, 97)
         gender = random.choice(['male', 'female'])

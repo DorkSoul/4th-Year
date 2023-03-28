@@ -33,30 +33,14 @@ if (!sessionId) {
   })
   .then((response) => response.json())
   .then((data) => {
-    // Get monthly subscription costs and next payment dates
-    let monthlyCosts = Array(12).fill(0);
     data.forEach(subscription => {
-        const{id, name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
-        const startDate = new Date(start_date);
-        const startMonth = startDate.getMonth();
-        let nextPaymentDate = new Date(start_date);
-
-        if (recurring_length === 'weekly') {
-          while (nextPaymentDate < new Date()) {
-            nextPaymentDate.setDate(nextPaymentDate.getDate() + 7);
-          }
-        } else if (recurring_length === 'monthly') {
-          while (nextPaymentDate < new Date()) {
-            nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
-          }
-        }
-
-        nextPaymentDates[id] = nextPaymentDate;
-        nextPaymentNames[id] = name;
-
-        const nextPaymentMonth = nextPaymentDate.getMonth();
+      const { id, name, start_date, recurring_length } = subscription;
+      const startDate = new Date(start_date);
+    
+      nextPaymentDates[id] = getPaymentDates(startDate, recurring_length);
+      nextPaymentNames[id] = name;
     });
-
+  
     renderCalendar(currentDate);
   })
   .catch(error => {
@@ -114,21 +98,33 @@ function renderCalendar(date) {
       } else if (dayNumber > daysInMonth) {
         // Empty cell after last day of month
       } else {
-        calendarDay.innerText = dayNumber;
-        dayNumber++;
+        const dayNumberElement = document.createElement("span");
+        dayNumberElement.classList.add("day-number");
+        dayNumberElement.innerText = dayNumber;
+        calendarDay.appendChild(dayNumberElement);
 
-        const nextPaymentDate = nextPaymentDates[dayNumber - 1];
-        if (nextPaymentDate) {
-          const subscriptionId = Object.keys(nextPaymentDates).find(id => nextPaymentDates[id].getTime() === nextPaymentDate.getTime());
-          const subscriptionName = nextPaymentNames[subscriptionId];
-          const subscriptionColor = getSubscriptionColor(subscriptionId);
-          
-          const subscriptionElement = document.createElement("div");
-          subscriptionElement.classList.add("subscription");
-          subscriptionElement.style.backgroundColor = subscriptionColor;
-          subscriptionElement.innerText = subscriptionName;
-          calendarDay.appendChild(subscriptionElement);
-        }
+
+        const subscriptionsContainer = document.createElement("div");
+        subscriptionsContainer.classList.add("subscriptions-container");
+
+        Object.keys(nextPaymentDates).forEach(subscriptionId => {
+          const paymentDates = nextPaymentDates[subscriptionId];
+          paymentDates.forEach(paymentDate => {
+            if (paymentDate.getFullYear() === currentDate.getFullYear() && paymentDate.getMonth() === currentDate.getMonth() && paymentDate.getDate() === dayNumber) {
+              const subscriptionName = nextPaymentNames[subscriptionId];
+              const subscriptionColor = getSubscriptionColor(subscriptionId);
+        
+              const subscriptionElement = document.createElement("div");
+              subscriptionElement.classList.add("subscription");
+              subscriptionElement.style.backgroundColor = subscriptionColor;
+              subscriptionElement.innerText = subscriptionName;
+              subscriptionsContainer.appendChild(subscriptionElement);
+            }
+          });
+        });
+
+        calendarDay.appendChild(subscriptionsContainer);
+        dayNumber++;
       }
 
       calendarRow.appendChild(calendarDay);
@@ -137,6 +133,7 @@ function renderCalendar(date) {
     calendarGrid.appendChild(calendarRow);
   }
 }
+
 
 const subscriptionColors = [
   "#FF0000", // Red
@@ -219,3 +216,31 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
     window.location.href = 'login.html';
   }
 });
+
+function getPaymentDates(startDate, recurring_length, targetMonth = currentDate.getMonth(), targetYear = currentDate.getFullYear()) {
+  let paymentDates = [];
+  let nextPaymentDate = new Date(startDate);
+  const maxDate = new Date(currentDate);
+  maxDate.setFullYear(maxDate.getFullYear() + 3);
+
+  while (nextPaymentDate <= maxDate) {
+    if (nextPaymentDate.getFullYear() >= targetYear && nextPaymentDate.getFullYear() <= maxDate.getFullYear()) {
+      paymentDates.push(new Date(nextPaymentDate));
+    }
+
+    if (recurring_length === 'weekly') {
+      nextPaymentDate.setDate(nextPaymentDate.getDate() + 7);
+    } else if (recurring_length === 'monthly') {
+      nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+    } else if (recurring_length === 'yearly') {
+      nextPaymentDate.setFullYear(nextPaymentDate.getFullYear() + 1);
+    } else {
+      break;
+    }
+  }
+  return paymentDates;
+}
+
+
+
+

@@ -142,6 +142,7 @@ const frequency = subFreqInput.value.trim();
 const description = subDescInput.value.trim();
 const cost = parseFloat(subCostInput.value.trim());
 const startDate = subDateInput.value.trim();
+console.log(startDate);
 const paymentMethod = subMethodInput.value.trim();
 const group = subGroupInput.value.trim();
 const notes = subNoteInput.value.trim();
