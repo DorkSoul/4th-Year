@@ -15,7 +15,7 @@ import os
 os.chdir(r'C:\Users\lukeh\Documents\College\4th-Year\Final-Year-Project\Site\docker-template\public\csv')
 
 cwd = os.getcwd()
-print("Current working directory:", cwd)
+# print("Current working directory:", cwd)
 
 # Start timer
 time_start = t.time()
@@ -31,13 +31,13 @@ subscriptions = pd.read_csv('subscriptions.csv', encoding = 'ISO-8859-1')
 
 
 new_subscription_df = pd.merge(ratings,subscriptions, on='sub_id')
-print(new_subscription_df.columns)
+# print(new_subscription_df.columns)
 
-print(ratings)
+# print(ratings)
 
 ratings_data_frame = pd.DataFrame(ratings, columns = ["user_id", "sub_id", "rating"], dtype = int)
-print("Data types:", ratings_data_frame.dtypes)
-print(ratings_data_frame)
+# print("Data types:", ratings_data_frame.dtypes)
+# print(ratings_data_frame)
 #print(ratings_data_frame.head(10))
 #print(ratings_data_frame.columns)
 
@@ -45,10 +45,10 @@ user_ratings = pd.pivot_table(ratings, index="user_id", columns="sub_id", values
 user_ratings = user_ratings.fillna(0)
 user_ratings.sort_index(axis=0, inplace=True)
 user_ratings.sort_index(axis=1, inplace=True)
-print(user_ratings)
+# print(user_ratings)
 
 # Check if there are any missing values 
-print("Null values in the rating dataset = ",ratings_data_frame.isnull().sum().sum())
+# print("Null values in the rating dataset = ",ratings_data_frame.isnull().sum().sum())
 
 def encode_ids(data):
     # Takes a rating dataframe and return:
@@ -56,8 +56,8 @@ def encode_ids(data):
     # - 2 mapping dictionaries
 
     data_encoded = data.copy()
-    print("Data which will be encoded: ")
-    print(data_encoded)
+    # print("Data which will be encoded: ")
+    # print(data_encoded)
      
     # data_frame of all unique users
     users = pd.DataFrame(data_encoded.user_id.unique(), columns = ['user_id'])
@@ -67,9 +67,9 @@ def encode_ids(data):
     # dataframe for all unique subscriptions 
     subscriptions = pd.DataFrame(data_encoded.sub_id.unique(), columns=['sub_id'])
     dict_subscriptions = subscriptions.to_dict()
-    print("1", dict_subscriptions)
+    # print("1", dict_subscriptions)
     individual_dict_subscriptions = {v: k for k, v in dict_subscriptions['sub_id'].items()}
-    print("2", dict_subscriptions)
+    # print("2", dict_subscriptions)
 
     data_encoded.user_id = data_encoded.user_id.map(individual_dict_users)
     data_encoded.sub_id = data_encoded.sub_id.map(individual_dict_subscriptions)
@@ -95,7 +95,7 @@ def encode_ids(data):
 # data -> dataframe containing 1 user 1subscription 1rating per row
 # alpha ->  number of factors/learning rate
 # n_epochs -> number of iteration of the SGD procedure
-def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .01, n_epochs = 20):
+def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .01, n_epochs = 1000):
     #Learn the vectors P and Q(all the weighted p_u and q_i) with SGD
         
     # Encoding userId's and movieId's in data
@@ -117,12 +117,12 @@ def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .01, n_epochs = 20
     # Randomly initialize the user and item factors.
     p1 = np.random.normal(0, .1, (n_unique_users, n_factors))
     p = expit(p1)
-    print("p : \n", p)
-    print(type(p))
+    # print("p : \n", p)
+    # print(type(p))
     q1 = np.random.normal(0, .1, (n_unique_subscriptions, n_factors))
     q = expit(q1)
-    print(type(q))
-    print("q : \n", q)
+    # print(type(q))
+    # print("q : \n", q)
 
     # Optimization procedure
     for epoch in range(n_epochs):
@@ -170,10 +170,13 @@ p, q = Stochastic_Gradient_Descent(ratings_data_frame)
 
 
 time_end = t.time()
-print("\nThe time to complete the Matrix factorisation is: ", time_end - time_start)
+elapsed_time = time_end - time_start
+hours, remainder = divmod(elapsed_time, 3600)
+minutes, seconds = divmod(remainder, 60)
+print("\nThe time to complete the Matrix factorisation is: {:02d}:{:02d}:{:02d} \n".format(int(hours), int(minutes), int(seconds)))
 
 user_item_estimate_values = pd.DataFrame(np.dot(p, q.transpose()))
-print(user_item_estimate_values.head(10))
+# print(user_item_estimate_values.head(10))
 
 # To get the estimated values encoded ids were used
 # Now we need to apply the associations of the encoded ids to its original ids
@@ -188,7 +191,7 @@ user_item_estimate_values.sort_index(axis=0, inplace=True)
 user_item_estimate_values.sort_index(axis=1, inplace=True)
 
 #Get user*item matrix
-print("user_item_estimate_values\n", user_item_estimate_values.head())
+# print("user_item_estimate_values\n", user_item_estimate_values.head())
 
 # Round each number to one decimal place
 rounded_df = user_item_estimate_values.round(1)
@@ -197,24 +200,37 @@ rounded_df = user_item_estimate_values.round(1)
 rounded_df.to_csv('userXsub.csv', index_label='id')
 
 # ratings given by user 1
-print("ratings given by user 1\n",user_ratings.loc[1][:10])
+# print("ratings given by user 1\n",user_ratings.loc[1][:10])
 # Estimated ratings for user 1 after SVD
-print("Estimated ratings for user 2 after SVD\n", user_item_estimate_values.loc[1][:10])
+# print("Estimated ratings for user 1 after SVD\n", user_item_estimate_values.loc[1][:10])
+
+# ratings given by user 2
+# print("ratings given by user 2\n" , user_ratings.loc[2][:10])
+# Estimated ratings for user 2 after SVD
+# print("Estimated ratings for user 2 after SVD\n", user_item_estimate_values.loc[2][:10])
 
 # ratings given by user 3
 print("ratings given by user 3\n", user_ratings.loc[3][:10])
 # Estimated ratings for user 3 after SVD
 print("Estimated ratings for user 3 after SVD\n", user_item_estimate_values.loc[3][:10])
 
-# ratings given by user 2
-print("ratings given by user 2\n" , user_ratings.loc[2][:10])
-# Estimated ratings for user 2 after SVD
-print("Estimated ratings for user 2 after SVD\n", user_item_estimate_values.loc[2][:10])
 
+def get_subscription_names(sub_ids):
+    # Get the names of the subscriptions corresponding to the given IDs
+    subscription_names = []
+    for sub_id in sub_ids:
+        sub_name = subscriptions.loc[subscriptions['sub_id'] == sub_id, 'name'].iloc[0]
+        subscription_names.append(sub_name)
+    return subscription_names
 
-# Give recommendations to a user(give the 10 highest recommendations: the recommendations with the highest rating)
+# Get the recommendations for user 2
 user_recommendations = list((user_item_estimate_values.loc[2]).sort_values(ascending=False)[:10].index)
-print("user_recommendation: ",user_recommendations)
+
+# Get the names of the recommended subscriptions
+recommended_subscription_names = get_subscription_names(user_recommendations)
+
+# Print the recommendations with names
+print("User recommendations: ", recommended_subscription_names)
 
 recom_list = pd.DataFrame(user_recommendations)
 # print("recom_list: " , recom_list)
@@ -233,7 +249,7 @@ def get_sub_name_from_movieid():
 
 final_recom_list = get_sub_name_from_movieid()
 
-print(final_recom_list)
+# print(final_recom_list)
 
 recom_list = pd.DataFrame(final_recom_list)
 # recom_list.to_csv("recom_list.csv")

@@ -25,6 +25,22 @@ if (!sessionId) {
   });
 }
 
+let userCurrency = 'euro';
+
+fetch("/user", {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ userId })
+})
+  .then((response) => response.json())
+  .then((data) => {
+    userCurrency = getCurrencySymbol(data.currency);
+  })
+  .catch((error) => {
+    console.error(error);
+    alert(error.message);
+  });
+
 fetch("/subscriptions", {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -32,25 +48,36 @@ fetch("/subscriptions", {
 })
   .then((response) => response.json())
   .then((data) => {
-    // Get weekly and monthly subscription costs
+    // Get weekly, monthly, and yearly subscription costs
+    console.log('Data received from subscriptions:', data);
     let monthlyCosts = Array(12).fill(0);
+    const currentYear = new Date().getFullYear();
     data.forEach(subscription => {
-        const{id, name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
-        const startDate = new Date(start_date);
+      const {id, name, category, image, cost, start_date, recurring_length, sort_group} = subscription;
+      const parsedCost = parseFloat(cost);
+      console.log('Cost for subscription', name, ':', parsedCost);
+      const startDate = new Date(start_date);
       const startMonth = startDate.getMonth();
-
-      if (recurring_length === 'weekly') {
-        for (let i = startMonth; i < 12; i++) {
-          const totalCost = Math.floor((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)) * (cost * 4);
-          monthlyCosts[i] += totalCost;
-        }
-      } else if (recurring_length === 'monthly') {
-        for (let i = startMonth; i < 12; i++) {
-          const totalCost = Math.floor((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)) * cost;
-          monthlyCosts[i] += totalCost;
+    
+      for (let i = startMonth; i < 12; i++) {
+        const currentDate = new Date(currentYear, i + 1, 0);
+        const monthsSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24 * 30));
+    
+        if (recurring_length === 'weekly') {
+          const totalCost = 4 * parsedCost;
+          monthlyCosts[i] += parseFloat(totalCost.toFixed(2));
+        } else if (recurring_length === 'monthly') {
+          const totalCost = parsedCost;
+          monthlyCosts[i] += parseFloat(totalCost.toFixed(2));
+        } else if (recurring_length === 'yearly') {
+          if (monthsSinceStart % 12 === 0) {
+            const totalCost = parsedCost;
+            monthlyCosts[i] += parseFloat(totalCost.toFixed(2));
+          }
         }
       }
     });
+    
 
     // Create chart
     const ctx = document.getElementById('myChart').getContext('2d');
@@ -70,39 +97,47 @@ const chart = new Chart(ctx, {
   },
   options: {
     scales: {
-      yAxes: [{
+      y: {
+        beginAtZero: true,
         ticks: {
-          beginAtZero: true,
-          callback: function(value, index, values) {
-            return '€' + value;
-          },
-          fontColor: 'black',
+          callback: function (value) {
+            return userCurrency + formatCurrencyValue(value, userCurrency);
+          },  
+          color: "black",
         },
-        gridLines: {
-          color: 'rgba(0, 0, 0, 0.1)',
-          zeroLineColor: 'rgba(0, 0, 0, 0.25)',
-          display: true,
+        grid: {
+          color: "rgba(0, 0, 0, 0.1)",
+          borderColor: "rgba(0, 0, 0, 0.25)",
           drawBorder: false,
         },
-      }],
-      xAxes: [{
+      },      
+      x: {
         ticks: {
-          fontColor: 'black',
+          color: "black",
         },
-        gridLines: {
-          color: 'rgba(0, 0, 0, 0.1)',
-          display: true,
+        grid: {
+          color: "rgba(0, 0, 0, 0.1)",
           drawBorder: false,
         },
-      }],
-    },
-    legend: {
-      display: true,
-      labels: {
-        fontColor: 'black',
       },
     },
-  },
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          color: "black",
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const value = context.parsed.y;
+            return `Monthly cost: ${userCurrency}${formatCurrencyValue(value, userCurrency)}`;
+          },          
+        },
+      },
+    },
+  },    
 });
 
 
@@ -146,7 +181,7 @@ const sortGroups = data.reduce((groups, { sort_group }) => {
             const value = dataset.data[index];
             const total = dataset.data.reduce((sum, currVal) => sum += currVal, 0);
             const percentage = `${Math.round((value / total) * 100)}%`;
-            return `${data.labels[index]}: ${percentage}`;
+            return `${data.labels[index]}: €${value.toFixed(2)} (${percentage})`;
           }
         }
       }
@@ -191,3 +226,26 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
     window.location.href = 'login.html';
   }
 });
+
+function getCurrencySymbol(currency) {
+  switch (currency) {
+    case 'euro':
+      return '€';
+    case 'dollar':
+      return '$';
+    case 'pound':
+      return '£';
+    case 'yen':
+      return '¥';
+    default:
+      return '';
+  }
+}
+
+function formatCurrencyValue(value, currency) {
+  if (currency === 'yen') {
+    return Math.round(value);
+  } else {
+    return value.toFixed(2);
+  }
+}

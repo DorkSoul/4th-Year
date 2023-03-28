@@ -64,7 +64,7 @@ def generate_user_data():
         for j, sub_id in enumerate(assigned_subs):
             cost = random.randint(1, 20)
             start_date = f"2021-{random.randint(1, 12)}-{random.randint(1,28)}"
-            recurring_length = random.choice(['monthly', 'monthly'])
+            recurring_length = random.choice(['weekly', 'monthly'])
             alert_id = 1
             # Assign sort_group based on sub_id
             if sub_id in range(1, 11):

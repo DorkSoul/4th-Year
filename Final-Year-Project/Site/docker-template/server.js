@@ -236,6 +236,24 @@ app.post("/user_user", async (req, res) => {
   }
 });
 
+app.post("/user", async (req, res) => {
+  const { userId } = req.body;
+
+  const query = `
+    SELECT *
+    FROM users
+    WHERE id = $1;
+  `;
+
+  try {
+    const result = await client.query(query, [userId]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
 app.post("/sub_subs", async (req, res) => {
   const { subId } = req.body;
 
