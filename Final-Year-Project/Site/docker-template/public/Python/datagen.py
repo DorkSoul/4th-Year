@@ -57,7 +57,9 @@ def generate_user_data():
 
         # Assign the majority of subscriptions to the user from the chosen group
         majority_subs = random.sample(majority_group, sub_count // 2)
-        assigned_subs = majority_subs + assigned_subs[len(majority_subs):]
+        remaining_subs = [sub for sub in assigned_subs if sub not in majority_subs]
+        assigned_subs = majority_subs + remaining_subs[:sub_count - len(majority_subs)]
+        assigned_subs = list(set(assigned_subs)) # Remove duplicates
 
         for j, sub_id in enumerate(assigned_subs):
             cost = random.randint(1, 20)

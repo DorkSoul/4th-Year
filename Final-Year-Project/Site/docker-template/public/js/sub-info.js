@@ -119,4 +119,14 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
   }
 });
 
+// Change the background color of all elements with class "text-block"
+function changeTextBlockBackground() {
+  const textBlocks = document.querySelectorAll('.text-block');
+  textBlocks.forEach(textBlock => {
+    textBlock.style.backgroundColor = '#0096ff';
+  });
+}
+
+// Call the function to change the background color
+changeTextBlockBackground();
   
