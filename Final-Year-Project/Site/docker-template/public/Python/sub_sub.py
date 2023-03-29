@@ -128,16 +128,16 @@ data_frame = new_m_r_df.copy()
 # Then Returns the user_subscriptions list 
 def user_subscriptions(user_id):
 
-    #print('User {} has subscribed the following subscriptions: \n'.format(user_id))
+    # print('User {} has subscribed the following subscriptions: \n'.format(user_id))
     n = 1
     for i in new_m_r_df[new_m_r_df[user_id] > 0][user_id].index.tolist():
-        #print(n,i)
+        # print(n,i)
         n = n + 1
         
     return new_m_r_df[new_m_r_df[user_id] > 0][user_id].index.tolist()
 
 # Call the user_subscriptions function which will print the subscribed subscriptions for the chosen user
-subscribed = user_subscriptions(1)
+subscribed = user_subscriptions(22)
 
 #print(subscribed[1])
 
@@ -163,7 +163,7 @@ def similar_subscriptions(subscriptions):
     #print("subscriptions_to_r: \n",similar_subscriptions_list)
     return similar_subscriptions_list
 
-# This function calls the similar_subscriptions function for 20 most similar subscriptions, each list of similar subscriptions is appended into a list
+# This function calls the similar_subscriptions function for 5 most similar subscriptions, each list of similar subscriptions is appended into a list
 # Each list is compared to eachother and the elements which are present in every list are then appended into the final list 
 def subscription_lists():
 
@@ -207,7 +207,7 @@ def subscription_lists():
     return final_list  
 
 def recommend():
-    subscribed = user_subscriptions(1)  # You can replace '1' with the desired user_id
+    subscribed = user_subscriptions(4597)  # You can replace '1' with the desired user_id
     subscribed_indices = [get_index_from_name(sub) for sub in subscribed]
 
     # Find similar subscriptions for all subscribed subscriptions and store them in a list
@@ -234,7 +234,7 @@ def recommend():
 
     # Save the top 5 subscriptions to a CSV file
     top_5_subscriptions_df = pd.DataFrame(top_5_subscriptions, columns=['subscription'])
-    top_5_subscriptions_df.to_csv("list2.csv", index=False)
+    # top_5_subscriptions_df.to_csv("list2.csv", index=False)
     
 recommend()
 

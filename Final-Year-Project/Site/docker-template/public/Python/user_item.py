@@ -95,7 +95,7 @@ def encode_ids(data):
 # data -> dataframe containing 1 user 1subscription 1rating per row
 # alpha ->  number of factors/learning rate
 # n_epochs -> number of iteration of the SGD procedure
-def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .01, n_epochs = 1000):
+def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .01, n_epochs = 20):
     #Learn the vectors P and Q(all the weighted p_u and q_i) with SGD
         
     # Encoding userId's and movieId's in data

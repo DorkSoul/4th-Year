@@ -15,7 +15,7 @@ import os
 os.chdir(r'C:\Users\lukeh\Documents\College\4th-Year\Final-Year-Project\Site\docker-template\public\csv')
 
 cwd = os.getcwd()
-print("Current working directory:", cwd)
+# print("Current working directory:", cwd)
 
 # Store Data
 data_frame = pd.read_csv('users.csv')
@@ -27,7 +27,7 @@ subscriptions = pd.read_csv('subscriptions.csv', encoding = 'ISO-8859-1')
 data_frame.insert(0, "user_id", range(1, len(data_frame)+1))
 
 # Print the updated DataFrame to verify the changes
-print(data_frame)
+# print(data_frame)
 
 
 # add a index column at the start of the data frame
@@ -50,7 +50,7 @@ user_features  = ['gender', 'age', 'time_zone']
 #print(data_frame[user_features].head(5))
 
 #Check for missing values in the imported columns
-#print("Missing Values in the dataframe = ", data_frame[user_features].isnull().values.any())
+# print("Missing Values in the dataframe = ", data_frame[user_features].isnull().values.any())
 
 #A function that combines the values of the imported columns into a single string
 def get_important_features(data):
@@ -81,8 +81,8 @@ user_cs = cosine_similarity(count_matrix)
 
 #print the user*user cosine similarity matrix
 #should display a matrix
-print("User*User Matrix:")
-print(user_cs) 
+# print("User*User Matrix:")
+# print(user_cs) 
 
 # Get the shape of the cosine similarity matrix
 #print(user_cs.shape)
@@ -113,18 +113,18 @@ def get_index_from_userId(userId):
 # print(data_frame.index)
 
 # Choose the user using its user_id 
-wanted_user = 2
+wanted_user = 3
 
 # Get the index of the user using its user_id
 user_index = get_index_from_userId(wanted_user)
-print("User index: ",user_index)
+# print("User index: ",user_index)
 print("User ID: ", get_userId_from_index(user_index))
 
 similar_users = list(enumerate(user_m_dataframe[user_index]))
-#print("similar_users",similar_users)
+# print("similar_users",similar_users)
 sorted_similar_users = sorted(similar_users, key=lambda x:x[1], reverse=True)
-#print("sorted_similar_users: ")
-#print(sorted_similar_users[:50])
+print("sorted_similar_users: ")
+print(sorted_similar_users[:15])
 
 
 # Define the number of similar users to retrieve
@@ -197,7 +197,7 @@ for similar in sorted_similar_users:
     i = i + 1 
 
     if(i > len(sorted_similar_users)):
-        print("Reached the end of the list")
+        # print("Reached the end of the list")
         break 
 
 
@@ -205,8 +205,8 @@ for similar in sorted_similar_users:
 #print("sim_score", sim_score)
 similar_users_df['user_id'] = IDs
 similar_users_df["similarity_score"] = sim_score
-#print("similar_users_df:")
-#print(similar_users_df)    
+# print("similar_users_df:")
+# print(similar_users_df)    
 
 ratings = ratings[['user_id', 'sub_id', 'rating']]
 # print(ratings)
@@ -227,10 +227,10 @@ new_df = new_subscription_df.pivot_table(index='name',columns='user_id', values=
 # then it returns the list of seen subscriptions 
 def user_seen_subscriptions(user):
 
-    #print('User {} has seen the following subscriptions: \n'.format(user))
+    # print('User {} has seen the following subscriptions: \n'.format(user))
     n = 1
     for i in new_df[new_df[user] > 0][user].index.tolist():
-        #print(n,i)
+        # print(n,i)
         n = n + 1
 
     return new_df[new_df[user] > 0][user].index.tolist()
@@ -246,7 +246,7 @@ def subscription_lists():
     
     seen_subscriptions = []
     subscriptions = []
-    for i in range(10):
+    for i in range(15):
         seen_subscriptions.append(user_seen_subscriptions(similar_users_df.user_id[i]))
 
     #print("seen subscriptions list: ", seen_subscriptions)
