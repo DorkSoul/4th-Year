@@ -160,41 +160,41 @@ const formData = {
 };
 
 // Send the POST request to add the subscription to the server
-fetch('/add-subscription', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(formData),
-})
-  .then((response) => {
-    if (response.ok) {
-      // Clear the form
-      subNameInput.value = '';
-      subFreqInput.value = '';
-      subDescInput.value = '';
-      subCostInput.value = '';
-      subDateInput.value = '';
-      subMethodInput.value = '';
-      subGroupInput.value = '';
-      subNoteInput.value = '';
+  fetch('/add-subscription', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => {
+      if (response.ok) {
+        // Clear the form
+        subNameInput.value = '';
+        subFreqInput.value = '';
+        subDescInput.value = '';
+        subCostInput.value = '';
+        subDateInput.value = '';
+        subMethodInput.value = '';
+        subGroupInput.value = '';
+        subNoteInput.value = '';
 
-      alert('Subscription added successfully');
-    } else if (response.status === 400) {
-      // Handle the "Subscription already exists" error
-      return response.json();
-    } else {
-      throw new Error('Subscription creation failed');
-    }
-  })
-  .then((data) => {
-    if (data && data.error) {
-      alert(data.error);
-    }
-  })
-  .catch
-((error) => {
-console.error(error);
-alert(error.message);
-});
+        alert('Subscription added successfully');
+      } else if (response.status === 400) {
+        // Handle the "Subscription already exists" error
+        return response.json();
+      } else {
+        throw new Error('Subscription creation failed');
+      }
+    })
+    .then((data) => {
+      if (data && data.error) {
+        alert(data.error);
+      }
+    })
+    .catch
+    ((error) => {
+      console.error(error);
+      alert(error.message);
+    });
 });
 
 

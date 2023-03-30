@@ -3,6 +3,8 @@ const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
 const userId = localStorage.getItem("userId");
 
+const recurringPayments = [];
+
 if (!sessionId) {
   // Redirect to login page
   window.location.href = "/login.html";
@@ -164,3 +166,253 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
     window.location.href = 'login.html';
   }
 });
+
+function fetchSubscriptions() {
+  return fetch('/all-subscriptions')
+    .then((response) => response.json())
+    .then((data) => {
+      const subscriptions = data.map((subscription) => {
+        const { id, name, category, image, description } = subscription;
+        return { id, name, category, image, description };
+      });
+
+      return subscriptions;
+    })
+    .catch((error) => {
+      console.error(error);
+      alert(error.message);
+    });
+}
+
+
+
+
+document.getElementById('import-subscriptions').addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = e.target.result;
+      const workbook = XLSX.read(data, { type: 'binary' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+      // Ignore the first few rows (header)
+      rows.splice(0, 13);
+
+      // Filter out rows with empty cells
+      const filteredRows = rows.filter(row => {
+        return row[1] || row[2] || row[4];
+      });
+
+      // Remove 'Money In' and 'Balance' columns and format the remaining data
+      const formattedRows = filteredRows.map(row => {
+        return {
+          date: convertDateFormat(row[0]),
+          name: row[2]
+            ? row[2]
+              .toLowerCase()
+              .split(' ')
+              .filter(word => !(/[0-9\/\*\-\+:]+/g).test(word))
+              .join(' ')
+            : '',
+          cost: row[4]
+        };
+      });
+
+
+
+
+      // console.log(formattedRows);
+
+
+      // Group the transactions by name and sort them by date
+      const groupedTransactions = {};
+
+      formattedRows.forEach((transaction) => {
+        const existingKey = Object.keys(groupedTransactions).find(key => hasCommonWords(key, transaction.name, 2));
+        if (existingKey) {
+          groupedTransactions[existingKey].push(transaction);
+
+          // Sort the transactions by date
+          groupedTransactions[existingKey].sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateA - dateB;
+          });
+        } else {
+          groupedTransactions[transaction.name] = [transaction];
+        }
+      });
+
+
+      // console.log("groupedTransactions: ", groupedTransactions);
+
+
+      Object.keys(groupedTransactions).forEach((name) => {
+        const transactions = groupedTransactions[name];
+
+        const intervals = [];
+        for (let i = 0; i < transactions.length - 1; i++) {
+          const date1 = new Date(transactions[i].date);
+          // console.log("transactions :", transactions[i], " date1: ", date1);
+
+          const date2 = new Date(transactions[i + 1].date);
+          // console.log("transactions :", transactions[i + 1], " date2: ", date2);
+
+          const diffInDays = Math.floor((date2 - date1) / (1000 * 60 * 60 * 24));
+          // console.log(diffInDays);
+
+          intervals.push(diffInDays);
+        }
+        // console.log(groupedTransactions[name], " intervals: ", intervals);
+
+        if (intervals.length > 0) {
+          const avgInterval = intervals.reduce((sum, value) => sum + value, 0) / intervals.length;
+          let recurringLength = '';
+          if (avgInterval >= 6 && avgInterval <= 9) {
+            recurringLength = 'weekly';
+          } else if (avgInterval >= 27 && avgInterval <= 35) {
+            recurringLength = 'monthly';
+          } else {
+            recurringLength = 'other';
+          }
+
+          // Get the most recent transaction cost
+          const mostRecentCost = transactions[transactions.length - 1].cost;
+
+          // Check if the last payment date is within the expected recurring length
+          const lastPaymentDate = new Date(transactions[transactions.length - 1].date);
+          const currentDate = new Date();
+          console.log("subscription: ", groupedTransactions[name], " current date: ", currentDate, " payment date: ", lastPaymentDate);
+          const daysSinceLastPayment = Math.floor((currentDate - lastPaymentDate) / (1000 * 60 * 60 * 24));
+          console.log("days since last payment: ", daysSinceLastPayment)
+
+          let shouldAddToRecurringPayments = false;
+
+          if (recurringLength === 'weekly' && daysSinceLastPayment <= 9) {
+            shouldAddToRecurringPayments = true;
+          } else if (recurringLength === 'monthly' && daysSinceLastPayment <= 35) {
+            shouldAddToRecurringPayments = true;
+          } else if (recurringLength === 'other') {
+            shouldAddToRecurringPayments = true;
+          }
+          console.log(shouldAddToRecurringPayments);
+
+          if (shouldAddToRecurringPayments) {
+            recurringPayments.push({
+              name: name,
+              start_date: transactions[0].date,
+              recurring_length: recurringLength,
+              cost: mostRecentCost,
+            });
+          }
+        }
+      });
+
+      console.log(recurringPayments);
+
+
+      // Check if any of the recurring payments match a subscription in the database
+      fetchSubscriptions().then((subscriptions) => {
+        console.log("returned subscriptions: ", subscriptions);
+        const subscriptionNames = subscriptions.map(subscription => subscription.name.toLowerCase());
+        const matchingSubscriptions = recurringPayments.filter(payment => {
+          console.log("payment.name: ", payment.name);
+          console.log("subscriptionNames: ", subscriptionNames);
+          console.log(subscriptionNames.some(name => payment.name.toLowerCase().includes(name)));
+          return subscriptionNames.some(name => payment.name.toLowerCase().includes(name));
+        });
+      
+        console.log(matchingSubscriptions);
+      
+        matchingSubscriptions.forEach((payment) => {
+          // Find the matching subscription object from the fetched subscriptions array
+          const matchingSubscription = subscriptions.find(subscription => payment.name.toLowerCase().includes(subscription.name.toLowerCase()));
+        
+          if (matchingSubscription) {
+            console.log(matchingSubscription)
+            const subData = {
+              user_id: userId,
+              sub_id: matchingSubscription.id,
+              cost: payment.cost,
+              start_date: payment.start_date,
+              recurring_length: payment.recurring_length,
+              sort_group: matchingSubscription.category,
+              user_notes: ''
+            };
+        
+            console.log("subData: ", subData);
+            addSubscription(subData);
+          }
+        });
+        
+      });
+      
+    
+
+
+    };
+    reader.readAsBinaryString(file);
+  }
+});
+
+document.getElementById('import-subscriptions-button').addEventListener('click', () => {
+  document.getElementById('import-subscriptions').click();
+});
+
+function hasCommonWords(s1, s2, minCommonWords = 2) {
+  if (!s1 || !s2) return false;
+
+  const words1 = s1.toLowerCase().split(' ');
+  const words2 = s2.toLowerCase().split(' ');
+  let commonWordsCount = 0;
+
+  words1.forEach(word1 => {
+    if (words2.includes(word1)) {
+      commonWordsCount++;
+    }
+  });
+
+  return commonWordsCount >= minCommonWords;
+}
+
+function convertDateFormat(dateStr) {
+  if (!dateStr) return '';
+
+  const [day, month, year] = dateStr.split('/');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
+
+
+
+function addSubscription(subData) {
+  fetch('/add-subscription', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(subData),
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert('Subscription added successfully');
+      } else if (response.status === 400) {
+        // Handle the "Subscription already exists" error
+        return response.json();
+      } else {
+        throw new Error('Subscription creation failed');
+      }
+    })
+    .then((data) => {
+      if (data && data.error) {
+        alert(data.error);
+      } else {
+        // Reload the page after adding all the subscriptions
+        // location.reload();
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      alert(error.message);
+    });
+}
+
