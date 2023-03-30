@@ -580,6 +580,7 @@
 
 .w-container {
   position: relative;
+  min-height: 200px;
 }
 
 .stat_info_block {
@@ -1676,3 +1677,19 @@
 .button{
   margin-left: 20px;
 }
+
+.apology-message {
+  font-size: 1.5em; /* Increase the font size */
+  font-weight: bold; /* Make the text bold */
+  text-align: center; /* Center align the text */
+  max-width: 80%; /* Set a maximum width for better readability */
+  margin: 0 auto; /* Center the paragraph horizontally */
+  position: absolute; /* Position the message in the middle of the page */
+  top: 50%; /* Set the top edge to be in the middle */
+  left: 50%; /* Set the left edge to be in the middle */
+  transform: translate(-50%, -50%); /* Shift the message to the true center */
+  padding: 1em; /* Add some padding around the text */
+  background-color: rgba(255, 255, 255, 0.9); /* Add a semi-transparent white background */
+  border-radius: 5px; /* Add rounded corners */
+}
+

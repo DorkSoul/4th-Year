@@ -407,7 +407,7 @@ function addSubscription(subData) {
         alert(data.error);
       } else {
         // Reload the page after adding all the subscriptions
-        // location.reload();
+        location.reload();
       }
     })
     .catch((error) => {

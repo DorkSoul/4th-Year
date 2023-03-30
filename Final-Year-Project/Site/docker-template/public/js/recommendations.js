@@ -171,9 +171,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // console.log(recommendations);
         return recommendations;
       })
-      .catch((error) => {
-        console.error(error);
-        alert(error.message);
+      .catch(error => {
+        console.error("Error fetching data:", error);
+        displayApologyMessage();
       });
   }
   
@@ -224,9 +224,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Return userSuggestions array
         return userSuggestions;
       })
-      .catch((error) => {
-        console.error(error);
-        alert(error.message);
+      .catch(error => {
+        console.error("Error fetching data:", error);
+        displayApologyMessage();
       });
   }
 
@@ -297,9 +297,9 @@ document.addEventListener("DOMContentLoaded", function () {
   
       return sortedSimilarSubs;
     })
-    .catch((error) => {
-      console.error(error);
-      alert(error.message);
+    .catch(error => {
+      console.error("Error fetching data:", error);
+      displayApologyMessage();
     });
   }
   
@@ -375,9 +375,9 @@ Promise.all([
   displaySimilarSubs(similarSubscriptionIds, userSubscriptions); // Pass userSubscriptions to displaySimilarSubs
   setupEventListeners();
   })
-  .catch((error) => {
-  console.error(error);
-  alert(error.message);
+  .catch(error => {
+    console.error("Error fetching data:", error);
+    displayApologyMessage();
   });
   });
 
@@ -416,3 +416,20 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
   }
 });
 
+function displayApologyMessage() {
+  // Select the w-container div
+  const wContainer = document.querySelector(".w-container");
+
+  // Empty the w-container div
+  wContainer.innerHTML = "";
+
+  // Create an apology message element
+  const apologyMessage = document.createElement("p");
+  apologyMessage.textContent = "We apologize for the inconvenience, but we are unable to load recommendations at the moment. Please try again later.";
+
+  // Add a class for styling if desired
+  apologyMessage.classList.add("apology-message");
+
+  // Append the apology message to the w-container div
+  wContainer.appendChild(apologyMessage);
+}
