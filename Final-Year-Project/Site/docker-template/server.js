@@ -120,7 +120,7 @@ app.post('/login', async (req, res) => {
 
           // Insert the session ID into the user_sessions table
           await client.query('INSERT INTO user_sessions (id) VALUES ($1)', [sessionId]);
-
+          console.log("user: ", username, " logged in");
           res.json({ success: true, sessionId: sessionId, userId: userId });
         }
       });
@@ -298,6 +298,7 @@ app.post("/add-subscription", async (req, res) => {
 
     try {
       await client.query(insertQuery, insertParams);
+      console.log("user ID: ", user_id, " added subscription ID: ", sub_id);
       res.status(201).json({ message: "Subscription added successfully" });
     } catch (error) {
       console.error(error);
@@ -383,6 +384,7 @@ app.post("/register", async (req, res) => {
 
     try {
       await client.query(insertUserLoginQuery, insertUserLoginParams);
+      console.log("user: ", username, " registered");
       res.status(201).json({ message: "User registered successfully", userId: userId });
     } catch (error) {
       console.error(error);
