@@ -20,34 +20,36 @@ if (!sessionId) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sessionId })
   })
-  .then(response => {
-    if (response.ok) {
-      return fetch("/subscriptions", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-    } else {
-      throw new Error('User session not valid');
-    }
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    data.forEach(subscription => {
-      const { id, name, start_date, recurring_length } = subscription;
-      const startDate = new Date(start_date);
-    
-      nextPaymentDates[id] = getPaymentDates(startDate, recurring_length);
-      nextPaymentNames[id] = name;
+    .then(response => {
+      if (response.ok) {
+        return fetch("/subscriptions", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        })
+      } else {
+        throw new Error('User session not valid');
+      }
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach(subscription => {
+        if (!subscription.cancelled) {
+          const { id, name, start_date, recurring_length } = subscription;
+          const startDate = new Date(start_date);
+
+          nextPaymentDates[id] = getPaymentDates(startDate, recurring_length);
+          nextPaymentNames[id] = name;
+        }
+      });
+
+      renderCalendar(currentDate);
+    })
+    .catch(error => {
+      console.error(error);
+      alert(error.message);
+      window.location.href = '/login.html';
     });
-  
-    renderCalendar(currentDate);
-  })
-  .catch(error => {
-    console.error(error);
-    alert(error.message);
-    window.location.href = '/login.html';
-  });
 }
 
 
@@ -113,7 +115,7 @@ function renderCalendar(date) {
             if (paymentDate.getFullYear() === currentDate.getFullYear() && paymentDate.getMonth() === currentDate.getMonth() && paymentDate.getDate() === dayNumber) {
               const subscriptionName = nextPaymentNames[subscriptionId];
               const subscriptionColor = getSubscriptionColor(subscriptionId);
-        
+
               const subscriptionElement = document.createElement("div");
               subscriptionElement.classList.add("subscription");
               subscriptionElement.style.backgroundColor = subscriptionColor;

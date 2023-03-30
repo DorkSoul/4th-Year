@@ -56,26 +56,28 @@ let userCurrency = 'euro';
         let monthlyCosts = Array(12).fill(0);
         const currentYear = new Date().getFullYear();
         data.forEach(subscription => {
-          const { id, name, category, image, cost, start_date, recurring_length, sort_group } = subscription;
-          const parsedCost = parseFloat(cost);
-          console.log('Cost for subscription', name, ':', parsedCost);
-          const startDate = new Date(start_date);
-          const startMonth = startDate.getMonth();
+          if (!subscription.cancelled) {
+            const { id, name, category, image, cost, start_date, recurring_length, sort_group } = subscription;
+            const parsedCost = parseFloat(cost);
+            console.log('Cost for subscription', name, ':', parsedCost);
+            const startDate = new Date(start_date);
+            const startMonth = startDate.getMonth();
 
-          for (let i = startMonth; i < 12; i++) {
-            const currentDate = new Date(currentYear, i + 1, 0);
-            const monthsSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24 * 30));
+            for (let i = startMonth; i < 12; i++) {
+              const currentDate = new Date(currentYear, i + 1, 0);
+              const monthsSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24 * 30));
 
-            if (recurring_length === 'weekly') {
-              const totalCost = 4 * parsedCost;
-              monthlyCosts[i] += parseFloat(totalCost.toFixed(2));
-            } else if (recurring_length === 'monthly') {
-              const totalCost = parsedCost;
-              monthlyCosts[i] += parseFloat(totalCost.toFixed(2));
-            } else if (recurring_length === 'yearly') {
-              if (monthsSinceStart % 12 === 0) {
+              if (recurring_length === 'weekly') {
+                const totalCost = 4 * parsedCost;
+                monthlyCosts[i] += parseFloat(totalCost.toFixed(2));
+              } else if (recurring_length === 'monthly') {
                 const totalCost = parsedCost;
                 monthlyCosts[i] += parseFloat(totalCost.toFixed(2));
+              } else if (recurring_length === 'yearly') {
+                if (monthsSinceStart % 12 === 0) {
+                  const totalCost = parsedCost;
+                  monthlyCosts[i] += parseFloat(totalCost.toFixed(2));
+                }
               }
             }
           }

@@ -36,7 +36,7 @@ fetch("/subscriptions", {
     gridContainer.innerHTML = '';
 
     data.forEach((subscription) => {
-      console.log(subscription.cancelled);
+      // console.log(subscription.cancelled);
       // Check if the subscription is not cancelled
       if (!subscription.cancelled) {
         const { id, name, category, image, cost, start_date, recurring_length, sort_group, description, cancelled, rating } = subscription;
