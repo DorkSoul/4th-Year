@@ -301,6 +301,7 @@
 
 .text-block {
   text-align: center;
+  padding: 5px;
 }
 
 .text-block-2 {
@@ -1623,3 +1624,50 @@
   border: 1px solid #000;
   margin-left: 20px;
 }
+
+#subscription-name{
+  margin: 10px;
+}
+
+#subscription-category{
+  margin: 10px;
+}
+
+#subscription-cost{
+  margin: 10px;
+}
+
+#subscription-renewal-date{
+  margin: 10px;
+}
+
+#subscription-start-date{
+  margin: 10px;
+}
+
+#subscription-total-paid{
+  margin: 10px;
+}
+
+.edit-button, .cancel-button {
+  margin: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  border-top: 1px solid #000;
+}
+
+.edit-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #f44336;
+  color: white;
+}
+
+

@@ -2,6 +2,9 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(window.location.search);
 const subId = urlParams.get('id');
 
+let subscriptionInfo = null;
+
+
 if (!subId) {
   window.location.href = "/index.html";
 }
@@ -40,7 +43,8 @@ fetch(`/subscriptions/${subId}`, {
   })
   .then((response) => response.json())
   .then((data) => {
-    const { name, category, image, cost, start_date, recurring_length, sort_group, description } = data[0];
+    subscriptionInfo = data[0];
+    const { name, category, image, cost, start_date, recurring_length, sort_group, description, rating } = data[0];
 
     const subscriptionName = document.querySelector('#subscription-name');
     subscriptionName.textContent = name;
@@ -129,4 +133,125 @@ function changeTextBlockBackground() {
 
 // Call the function to change the background color
 changeTextBlockBackground();
+
+// Function to make subscription information editable
+function makeEditable(editable) {
+  const subDataText = document.querySelectorAll('.sub_data .text-block-2, .sub_data .text-block-3, .sub_data .text-block-4');
+  subDataText.forEach(textBlock => {
+    if (editable) {
+      textBlock.setAttribute('contentEditable', 'true');
+    } else {
+      textBlock.removeAttribute('contentEditable');
+    }
+  });
+}
+
+// Edit button click event listener
+document.getElementById('edit-button').addEventListener('click', (event) => {
+  const editButton = event.target;
+  if (editButton.textContent === 'Edit') {
+    makeEditable(true);
+    editButton.textContent = 'Save';
+  } else {
+    makeEditable(false);
+    editButton.textContent = 'Edit';
+    // Save the updated subscription information
+    updateSubscription(); // Call the updateSubscription function here
+  }
+});
+
+// Cancel button click event listener
+document.getElementById('cancel-button').addEventListener('click', () => {
+  if (confirm('Are you sure you want to cancel this subscription?')) {
+    cancelSubscription(); // Call the cancelSubscription function here
+  }
+});
+
+function updateSubscription() {
+  // Get values from the text elements
+  const cost = parseFloat(document.querySelector('#subscription-cost').textContent.slice(1));
+  const start_date = document.querySelector('#subscription-start-date').textContent;
+  const recurring_length = document.querySelector('#subscription-renewal-date').textContent;
+  const sort_group = document.querySelector('#subscription-total-paid').textContent;
+  const user_notes = ''; // You can add a user_notes element if needed
+  const cancelled = false; // Set to true if the subscription is cancelled
   
+  // Convert start_date to the ISO 8601 format
+  const [day, month, year] = start_date.split('/');
+  const isoStartDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+  const updatedFields = {
+    cost: cost,
+    start_date: isoStartDate,
+    recurring_length: recurring_length,
+    sort_group: sort_group,
+    user_notes: subscriptionInfo.user_notes,
+    cancelled: subscriptionInfo.cancelled
+  };
+
+  fetch('/update-subscription', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      user_id: userId,
+      sub_id: subId,
+      ...updatedFields
+    })
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Error updating the subscription');
+      }
+    })
+    .then((data) => {
+      console.log(data.message);
+      alert('Subscription updated successfully');
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.error(error);
+      alert(error.message);
+    });
+}
+
+
+
+
+function cancelSubscription() {
+  if (!subscriptionInfo) {
+    alert('Error: Subscription information not available.');
+    return;
+  }
+
+  const updatedSubscription = { ...subscriptionInfo, cancelled: true };
+
+  fetch('/update-subscription', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      user_id: userId,
+      sub_id: subId,
+      ...updatedSubscription
+    })
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Error canceling the subscription');
+      }
+    })
+    .then((data) => {
+      console.log(data.message);
+      alert('Subscription canceled successfully');
+      window.location.href = "/index.html";
+    })
+    .catch((error) => {
+      console.error(error);
+      alert(error.message);
+    });
+}
+
+

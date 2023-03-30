@@ -49,7 +49,7 @@ app.post("/subscriptions", async (req, res) => {
   const { username, password } = req.body;
 
   const query = `
-    SELECT s.id, s.name, s.category, s.image, us.cost, us.start_date, us.recurring_length, us.sort_group 
+    SELECT s.id, s.name, s.category, s.image, us.cost, us.start_date, us.recurring_length, us.sort_group, s.description, us.cancelled, us.rating
     FROM user_login ul 
     INNER JOIN users u ON ul.id = u.id 
     INNER JOIN user_subs us ON u.id = us.user_id 
@@ -391,6 +391,31 @@ app.post("/register", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "User creation failed" });
+  }
+});
+
+app.post("/update-subscription", async (req, res) => {
+  const { user_id, sub_id, cost, start_date, recurring_length, sort_group, user_notes, cancelled } = req.body;
+
+  const updateQuery = `
+    UPDATE user_subs
+    SET cost = $3, start_date = $4, recurring_length = $5, sort_group = $6, user_notes = $7, cancelled = $8
+    WHERE user_id = $1 AND sub_id = $2;
+  `;
+
+  const updateParams = [user_id, sub_id, cost, start_date, recurring_length, sort_group, user_notes, cancelled];
+
+  try {
+    const updateResult = await client.query(updateQuery, updateParams);
+
+    if (updateResult.rowCount > 0) {
+      res.status(200).json({ message: "Subscription updated successfully" });
+    } else {
+      res.status(400).json({ error: "Subscription not found for this user" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error updating the subscription" });
   }
 });
 
