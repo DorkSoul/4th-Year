@@ -224,12 +224,11 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  /* Updated property */
 }
 
 
 .sub_main {
-  background-color: #f0f0f0;
+  background-color: white;
   cursor: pointer;
   box-shadow: 0 12px 16px rgba(0, 0, 0, 0.4), 0 6px 8px rgba(0, 0, 0, 0.25);
   transition: box-shadow 0.3s ease-in-out;
@@ -237,7 +236,7 @@
 }
 
 .sub_main:hover {
-  background-color: #f0f0f0;
+  background-color: white;
   cursor: pointer;
   box-shadow: 0 16px 24px rgba(0, 0, 0, 0.5), 0 10px 16px rgba(0, 0, 0, 0.35);
   border-radius: 20px;
@@ -282,7 +281,6 @@
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   position: relative;
-  /* Add position relative to make sure the line is positioned correctly */
 }
 
 .sub_info::after {
