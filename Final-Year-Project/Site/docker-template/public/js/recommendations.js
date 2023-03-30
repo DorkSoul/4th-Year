@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         subscriptions = data;    
         data.forEach((subscription) => {
           const { id, name, category, image, description } = subscription;
-          console.log(subscription);
+          // console.log(subscription);
   
           // Add content (e.g., image, name, etc.) to the subscription element
           const newDiv = document.createElement('div');
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
         // Sort the array by size from biggest to smallest
         recommendations = recommendationArray.sort((a, b) => b.rating - a.rating);
-        console.log(recommendations);
+        // console.log(recommendations);
         return recommendations;
       })
       .catch((error) => {
