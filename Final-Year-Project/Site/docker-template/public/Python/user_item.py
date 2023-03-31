@@ -95,7 +95,7 @@ def encode_ids(data):
 # data -> dataframe containing 1 user 1subscription 1rating per row
 # alpha ->  number of factors/learning rate
 # n_epochs -> number of iteration of the SGD procedure
-def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .01, n_epochs = 20):
+def Stochastic_Gradient_Descent(data, n_factors = 10, alpha = .01, n_epochs = 5):
     #Learn the vectors P and Q(all the weighted p_u and q_i) with SGD
         
     # Encoding userId's and movieId's in data
@@ -210,9 +210,9 @@ rounded_df.to_csv('userXsub.csv', index_label='id')
 # print("Estimated ratings for user 2 after SVD\n", user_item_estimate_values.loc[2][:10])
 
 # ratings given by user 3
-print("ratings given by user 3\n", user_ratings.loc[3][:10])
+print("ratings given by user 962\n", user_ratings.loc[962][:10])
 # Estimated ratings for user 3 after SVD
-print("Estimated ratings for user 3 after SVD\n", user_item_estimate_values.loc[3][:10])
+print("Estimated ratings for user 962 after SVD\n", user_item_estimate_values.loc[962][:10])
 
 
 def get_subscription_names(sub_ids):
@@ -223,8 +223,8 @@ def get_subscription_names(sub_ids):
         subscription_names.append(sub_name)
     return subscription_names
 
-# Get the recommendations for user 2
-user_recommendations = list((user_item_estimate_values.loc[2]).sort_values(ascending=False)[:10].index)
+# Get the recommendations for user 962
+user_recommendations = list((user_item_estimate_values.loc[962]).sort_values(ascending=False)[:10].index)
 
 # Get the names of the recommended subscriptions
 recommended_subscription_names = get_subscription_names(user_recommendations)
