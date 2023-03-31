@@ -1,3 +1,4 @@
+// Retrieve user session and login information from local storage
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
@@ -7,10 +8,12 @@ const userId = localStorage.getItem("userId");
 function updateLoginLogoutButton() {
   const loginLogoutButton = document.getElementById('login-logout');
 
+    // If the user is logged in, set the button text to 'Logout' and remove the href attribute
   if (localStorage.getItem('sessionId')) {
     loginLogoutButton.textContent = 'Logout';
     loginLogoutButton.href = 'javascript:void(0)';
   } else {
+        // If the user is not logged in, set the button text to 'Login' and link to the login page
     loginLogoutButton.textContent = 'Login';
     loginLogoutButton.href = 'login.html';
   }
@@ -37,10 +40,12 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
   }
 });
 
+// Retrieve form element and add submit event listener
 const form = document.getElementById('wf-form-Subscription-Form');
 form.addEventListener('submit', (event) => {
   event.preventDefault();
 
+    // Retrieve input values from the form
   const usernameInput = document.getElementById('user_username-2');
   const passwordInput = document.getElementById('user_password');
   const firstNameInput = document.getElementById('user_first-2');
@@ -54,6 +59,7 @@ form.addEventListener('submit', (event) => {
   const addressInput = document.getElementById('user_address-2');
   const countryInput = document.getElementById('user_country-2');
 
+    // Trim input values and assign to variables
   const username = usernameInput.value.trim();
   const password = passwordInput.value.trim();
   const firstName = firstNameInput.value.trim();
@@ -67,6 +73,7 @@ form.addEventListener('submit', (event) => {
   const address = addressInput.value.trim();
   const country = countryInput.value.trim();
 
+    // Create an object containing the form data
   const formData = {
     username,
     password,
@@ -82,27 +89,28 @@ form.addEventListener('submit', (event) => {
     country
   };
 
+    // Send the form data to the server using a fetch request
   fetch('/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(formData)
-})
-.then((response) => {
-    if (response.ok) {
+  })
+    .then((response) => {
+      if (response.ok) {
         alert('Account created successfully');
         // Redirect to the login page
         window.location.href = '/login.html';
-    } else {
+      } else {
         // Get the error message from the server response
         return response.json().then((errorData) => {
-            throw new Error(errorData.error);
+          throw new Error(errorData.error);
         });
-    }
-})
-.catch((error) => {
-    console.error(error);
-    alert(error.message);
-});
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      alert(error.message);
+    });
 });
 
 

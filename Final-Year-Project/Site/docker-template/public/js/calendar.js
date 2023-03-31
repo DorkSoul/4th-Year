@@ -1,8 +1,10 @@
+// Retrieve the user's session 
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
 const userId = localStorage.getItem("userId");
 
+// Get DOM elements for calendar and navigation buttons
 const calendarMonthYear = document.getElementById("calendar-month-year");
 const prevMonthBtn = document.getElementById("prev-month");
 const nextMonthBtn = document.getElementById("next-month");
@@ -19,7 +21,8 @@ if (!sessionId) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sessionId })
-  })
+  }) 
+  // Fetch user's subscriptions and populate next payment dates and names
     .then(response => {
       if (response.ok) {
         return fetch("/subscriptions", {
@@ -62,18 +65,21 @@ calendarMonthYear.innerText = currentDate.toLocaleString("default", { month: "lo
 renderCalendar(currentDate);
 
 // Add click listeners to buttons to change month
+// Navigate to the previous month in the calendar
 prevMonthBtn.addEventListener("click", () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
   calendarMonthYear.innerText = currentDate.toLocaleString("default", { month: "long", year: "numeric" });
   renderCalendar(currentDate);
 });
 
+// Navigate to the next month in the calendar
 nextMonthBtn.addEventListener("click", () => {
   currentDate.setMonth(currentDate.getMonth() + 1);
   calendarMonthYear.innerText = currentDate.toLocaleString("default", { month: "long", year: "numeric" });
   renderCalendar(currentDate);
 });
 
+// Render the calendar for a given month
 function renderCalendar(date) {
   // Clear previous calendar grid
   calendarGrid.innerHTML = '';
@@ -179,6 +185,7 @@ const subscriptionColors = [
   "#C0C0C0", // Light Gray
 ];
 
+// Get the color for a subscription based on its ID
 function getSubscriptionColor(id) {
   const index = parseInt(id, 10) % subscriptionColors.length;
   return subscriptionColors[index];
@@ -219,6 +226,7 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
   }
 });
 
+// Calculate payment dates for a subscription given its start date and recurring length
 function getPaymentDates(startDate, recurring_length, targetMonth = currentDate.getMonth(), targetYear = currentDate.getFullYear()) {
   let paymentDates = [];
   let nextPaymentDate = new Date(startDate);

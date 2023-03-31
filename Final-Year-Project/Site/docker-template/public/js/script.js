@@ -1,3 +1,4 @@
+// Get session information from local storage
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
@@ -5,6 +6,7 @@ const userId = localStorage.getItem("userId");
 
 const recurringPayments = [];
 
+// Check if the user is logged in
 if (!sessionId) {
   // Redirect to login page
   window.location.href = "/login.html";
@@ -27,6 +29,7 @@ if (!sessionId) {
     });
 }
 
+// Fetch user's subscriptions
 fetch("/subscriptions", {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -38,7 +41,6 @@ fetch("/subscriptions", {
     gridContainer.innerHTML = '';
 
     data.forEach((subscription) => {
-      // console.log(subscription.cancelled);
       // Check if the subscription is not cancelled
       if (!subscription.cancelled) {
         const { id, name, category, image, cost, start_date, recurring_length, sort_group, description, cancelled, rating } = subscription;
@@ -167,6 +169,7 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
   }
 });
 
+// Fetch all subscriptions from the database
 function fetchSubscriptions() {
   return fetch('/all-subscriptions')
     .then((response) => response.json())
@@ -186,7 +189,7 @@ function fetchSubscriptions() {
 
 
 
-
+// Import subscriptions from a excel file
 document.getElementById('import-subscriptions').addEventListener('change', (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -323,13 +326,13 @@ document.getElementById('import-subscriptions').addEventListener('change', (even
           console.log(subscriptionNames.some(name => payment.name.toLowerCase().includes(name)));
           return subscriptionNames.some(name => payment.name.toLowerCase().includes(name));
         });
-      
+
         console.log(matchingSubscriptions);
-      
+
         matchingSubscriptions.forEach((payment) => {
           // Find the matching subscription object from the fetched subscriptions array
           const matchingSubscription = subscriptions.find(subscription => payment.name.toLowerCase().includes(subscription.name.toLowerCase()));
-        
+
           if (matchingSubscription) {
             console.log(matchingSubscription)
             const subData = {
@@ -341,15 +344,15 @@ document.getElementById('import-subscriptions').addEventListener('change', (even
               sort_group: matchingSubscription.category,
               user_notes: ''
             };
-        
+
             console.log("subData: ", subData);
             addSubscription(subData);
           }
         });
-        
+        alert('Import finished');
       });
-      
-    
+
+
 
 
     };
@@ -357,10 +360,12 @@ document.getElementById('import-subscriptions').addEventListener('change', (even
   }
 });
 
+// Trigger the file input when the import button is clicked
 document.getElementById('import-subscriptions-button').addEventListener('click', () => {
   document.getElementById('import-subscriptions').click();
 });
 
+// Check if two strings have a minimum number of common words
 function hasCommonWords(s1, s2, minCommonWords = 2) {
   if (!s1 || !s2) return false;
 
@@ -377,6 +382,7 @@ function hasCommonWords(s1, s2, minCommonWords = 2) {
   return commonWordsCount >= minCommonWords;
 }
 
+// Convert date format from DD/MM/YYYY to YYYY-MM-DD
 function convertDateFormat(dateStr) {
   if (!dateStr) return '';
 
@@ -385,7 +391,7 @@ function convertDateFormat(dateStr) {
 }
 
 
-
+// Add a subscription to the database
 function addSubscription(subData) {
   fetch('/add-subscription', {
     method: 'POST',
@@ -394,7 +400,6 @@ function addSubscription(subData) {
   })
     .then((response) => {
       if (response.ok) {
-        alert('Subscription added successfully');
       } else if (response.status === 400) {
         // Handle the "Subscription already exists" error
         return response.json();

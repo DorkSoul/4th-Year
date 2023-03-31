@@ -1,16 +1,19 @@
+// Retrieve user data from local storage
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
 const userId = localStorage.getItem("userId");
 
-// Handle the login form submission
+// Attach a submit event listener to the login form
 const loginForm = document.getElementById('wf-form-Subscription-Form');
 loginForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
+  // Get input values for username and password from the form
   const username = document.getElementById('user_username').value;
   const password = document.getElementById('user_password').value;
 
+  // Send a POST request to the server to log in the user
   fetch('/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

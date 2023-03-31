@@ -1,10 +1,16 @@
+// Get the query string from the URL
 const queryString = window.location.search;
+
+// Parse the query string to extract the id parameter
 const urlParams = new URLSearchParams(window.location.search);
+
+// Get the subscription id from the URL parameters
 const subId = urlParams.get('id');
 
 let subscriptionInfo = null;
 
 
+// Redirect to the main page if the subscription id is not found
 if (!subId) {
   window.location.href = "/index.html";
 }
@@ -14,6 +20,7 @@ const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
 const userId = localStorage.getItem("userId");
 
+// Check if the user has an active session
 if (!sessionId) {
   // Redirect to login page
   window.location.href = "/login.html";
@@ -23,24 +30,25 @@ if (!sessionId) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sessionId })
   })
-  .then(response => {
-    if (response.ok) {
-      return;
-    } else {
-      window.location.href = '/login.html';
-    }
-  })
-  .catch(error => {
-    console.error(error);
-    alert(error.message);
-  });
+    .then(response => {
+      if (response.ok) {
+        return;
+      } else {
+        window.location.href = '/login.html';
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert(error.message);
+    });
 }
 
+// Fetch the subscription details from the server using the subscription id
 fetch(`/subscriptions/${subId}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: username })
-  })
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ username: username })
+})
   .then((response) => response.json())
   .then((data) => {
     subscriptionInfo = data[0];
@@ -61,7 +69,7 @@ fetch(`/subscriptions/${subId}`, {
 
     const subscriptionStartDate = document.querySelector('#subscription-start-date');
     const startDateObj = new Date(start_date);
-    const formattedStartDate = `${startDateObj.getDate()}/${startDateObj.getMonth()+1}/${startDateObj.getFullYear()}`;
+    const formattedStartDate = `${startDateObj.getDate()}/${startDateObj.getMonth() + 1}/${startDateObj.getFullYear()}`;
     subscriptionStartDate.textContent = formattedStartDate;
 
     const subscriptionRecurringLength = document.querySelector('#subscription-renewal-date');
@@ -72,12 +80,12 @@ fetch(`/subscriptions/${subId}`, {
     const daysInMonth = 30;
     const daysInWeek = 7;
     const timeDiff = Math.abs(currentDate.getTime() - startDateObj.getTime());
-    const diffDays = Math.floor(timeDiff / (1000 * 3600 * 24)); 
+    const diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
     let totalPaid = 0;
     if (recurring_length === 'monthly') {
-      totalPaid = Math.floor(diffDays/daysInMonth)*cost;
+      totalPaid = Math.floor(diffDays / daysInMonth) * cost;
     } else if (recurring_length === 'weekly') {
-      totalPaid = Math.floor(diffDays/daysInWeek)*cost;
+      totalPaid = Math.floor(diffDays / daysInWeek) * cost;
     }
     subscriptionSortGroup.textContent = `€${totalPaid}`;
 
@@ -89,7 +97,7 @@ fetch(`/subscriptions/${subId}`, {
     alert(error.message);
   });
 
-  // Check if the user is logged in and update the login-logout button accordingly
+// Check if the user is logged in and update the login-logout button accordingly
 function updateLoginLogoutButton() {
   const loginLogoutButton = document.getElementById('login-logout');
 
@@ -167,6 +175,7 @@ document.getElementById('cancel-button').addEventListener('click', () => {
   }
 });
 
+// Update the subscription information
 function updateSubscription() {
   // Get values from the text elements
   const cost = parseFloat(document.querySelector('#subscription-cost').textContent.slice(1));
@@ -175,7 +184,7 @@ function updateSubscription() {
   const sort_group = document.querySelector('#subscription-total-paid').textContent;
   const user_notes = ''; // You can add a user_notes element if needed
   const cancelled = false; // Set to true if the subscription is cancelled
-  
+
   // Convert start_date to the ISO 8601 format
   const [day, month, year] = start_date.split('/');
   const isoStartDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
@@ -219,6 +228,7 @@ function updateSubscription() {
 
 
 
+// Cancel the subscription
 function cancelSubscription() {
   if (!subscriptionInfo) {
     alert('Error: Subscription information not available.');

@@ -1,8 +1,10 @@
+// Get user data from localStorage
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
 const userId = localStorage.getItem("userId");
 
+// Check if the user is logged in
 if (!sessionId) {
   // Redirect to login page
   window.location.href = "/login.html";
@@ -27,8 +29,10 @@ if (!sessionId) {
 
 let userCurrency = 'euro';
 
+// Fetch user and subscription data
 (async function () {
   try {
+    // Fetch user data
     const userData = await fetch("/user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -37,6 +41,7 @@ let userCurrency = 'euro';
     const userJsonData = await userData.json();
     userCurrency = getCurrencySymbol(userJsonData.currency);
 
+    // Fetch subscription data
     const subscriptionData = await fetch("/subscriptions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -44,6 +49,7 @@ let userCurrency = 'euro';
     });
     const subscriptionJsonData = await subscriptionData.json();
 
+    // Process subscription data
     fetch("/subscriptions", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -233,6 +239,7 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
   }
 });
 
+// Helper function to get currency symbol
 function getCurrencySymbol(currency) {
   switch (currency) {
     case 'Euro':
@@ -248,6 +255,7 @@ function getCurrencySymbol(currency) {
   }
 }
 
+// Helper function to format currency value
 function formatCurrencyValue(value) {
   if (userCurrency === '¥') {
     return Math.round(value);

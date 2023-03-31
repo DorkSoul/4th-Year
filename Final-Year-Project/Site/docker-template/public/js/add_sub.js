@@ -1,3 +1,4 @@
+// Retrieve the user's session 
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
@@ -59,6 +60,7 @@ document.getElementById('login-logout').addEventListener('click', (event) => {
   }
 });
 
+// Fetch the user's subscription information and display it on the page
 fetch('/all-subscriptions')
   .then((response) => response.json())
   .then((data) => {
@@ -94,6 +96,7 @@ function populateSubscriptionNames(subscriptions) {
   });
 };
 
+// Extract the unique categories from the subscriptions
 function extractCategories(subscriptions) {
   const categories = [];
   subscriptions.forEach(subscription => {
