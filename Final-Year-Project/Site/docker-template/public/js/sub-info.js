@@ -1,3 +1,4 @@
+// D20125299 - Luke Hallinan
 // Get the query string from the URL
 const queryString = window.location.search;
 

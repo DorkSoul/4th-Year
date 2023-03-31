@@ -1,3 +1,4 @@
+// D20125299 - Luke Hallinan
 // Retrieve user data from local storage
 const sessionId = localStorage.getItem("sessionId");
 const username = localStorage.getItem("username");

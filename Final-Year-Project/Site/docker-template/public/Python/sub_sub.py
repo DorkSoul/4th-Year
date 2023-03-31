@@ -1,4 +1,6 @@
-# C17378303 - Mariana Pirtac
+# D20125299 - Luke Hallinan
+
+# Original base code from C17378303 - Mariana Pirtac
 # This program:
 #               Generates the user subscription * subscription matrix
 #               Generates a list of subscription reccoemndations using content based filtering

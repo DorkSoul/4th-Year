@@ -1,3 +1,4 @@
+// D20125299 - Luke Hallinan
 // Retrieve session data from local storage
 const sessionId = localStorage.getItem("sessionId");
 const userId = localStorage.getItem("userId");
@@ -118,16 +119,6 @@ document.addEventListener("DOMContentLoaded", function () {
         data.forEach((subscription) => {
           const { id, name, category, image, description } = subscription;
           // console.log(subscription);
-
-          // Add content (e.g., image, name, etc.) to the subscription element
-          const newDiv = document.createElement('div');
-          newDiv.classList.add('grid-item');
-          newDiv.innerHTML = `
-            <a href="#" class="show-popup">
-              <img src="${image}" loading="lazy" alt="">
-            </a>
-          `;
-          recommendationsDiv.appendChild(newDiv);
         });
 
         // Add the show-popup class to each image element
