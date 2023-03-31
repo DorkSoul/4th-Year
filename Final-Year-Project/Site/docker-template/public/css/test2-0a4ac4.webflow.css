@@ -546,7 +546,6 @@
 .stats_popup {
   position: absolute;
   top: calc(60px + 1rem);
-  /* height of the banner plus some padding */
   display: flex;
   flex-direction: column;
   align-items: center;

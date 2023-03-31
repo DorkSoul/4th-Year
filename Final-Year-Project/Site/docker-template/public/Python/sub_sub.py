@@ -207,7 +207,7 @@ def subscription_lists():
     return final_list  
 
 def recommend():
-    subscribed = user_subscriptions(4597)  # You can replace '1' with the desired user_id
+    subscribed = user_subscriptions(9)  # You can replace '1' with the desired user_id
     subscribed_indices = [get_index_from_name(sub) for sub in subscribed]
 
     # Find similar subscriptions for all subscribed subscriptions and store them in a list

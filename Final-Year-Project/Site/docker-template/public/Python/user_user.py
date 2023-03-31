@@ -44,7 +44,7 @@ data_frame.insert(loc, column = 'index', value=data_frame.index)
 #print(data_frame.shape)
 
 # Create a list of important columns name user_features 
-user_features  = ['gender', 'age', 'time_zone']
+user_features  = ['gender', 'age', 'country']
 
 #Show the data
 #print(data_frame[user_features].head(5))
@@ -57,7 +57,7 @@ def get_important_features(data):
     user_data = [] # initialize an empty list
     for i in range(0, data.shape[0]):
         # concatenate the strings from different columns
-        user_data.append(str(data['gender'][i]) + ' ' + str(data['age'][i]) + ' ' + str(data['time_zone'][i]))
+        user_data.append(str(data['gender'][i]) + ' ' + str(data['age'][i]) + ' ' + str(data['country'][i]))
     return user_data
 
 
@@ -113,7 +113,7 @@ def get_index_from_userId(userId):
 # print(data_frame.index)
 
 # Choose the user using its user_id 
-wanted_user = 3
+wanted_user = 415
 
 # Get the index of the user using its user_id
 user_index = get_index_from_userId(wanted_user)
@@ -123,12 +123,16 @@ print("User ID: ", get_userId_from_index(user_index))
 similar_users = list(enumerate(user_m_dataframe[user_index]))
 # print("similar_users",similar_users)
 sorted_similar_users = sorted(similar_users, key=lambda x:x[1], reverse=True)
-print("sorted_similar_users: ")
+print("sorted_similar_users by index: ")
 print(sorted_similar_users[:15])
 
 
 # Define the number of similar users to retrieve
 num_similar_users = 5
+
+# function to get the subscription name from its id
+def get_subscription_name(sub_id):
+    return subscriptions[subscriptions['sub_id'] == sub_id]['name'].values[0]   
 
 # Open a CSV file to store the results
 with open('userXuser.csv', mode='w', newline='') as file:
@@ -167,6 +171,10 @@ with open('userXuser.csv', mode='w', newline='') as file:
 
         # Write the results to the CSV file
         row = [user_id] + similar_subs
+        row_with_names = [user_id] + [get_subscription_name(sub_id) for sub_id in similar_subs]
+
+        if user_id == wanted_user:
+            print("recommendations for user " + str(row_with_names))
         writer.writerow(row)
 
 
@@ -246,7 +254,7 @@ def subscription_lists():
     
     seen_subscriptions = []
     subscriptions = []
-    for i in range(15):
+    for i in range(20):
         seen_subscriptions.append(user_seen_subscriptions(similar_users_df.user_id[i]))
 
     #print("seen subscriptions list: ", seen_subscriptions)
@@ -280,16 +288,16 @@ def recommend():
 
     subscriptions = subscription_lists()
     #print("\nsubscription Recomendations: \n", subscriptions)
-    print("\nsubscription Recomendations:")
-    print("\n".join(map(str,subscriptions)))
+    # print("\nsubscription Recomendations:")
+    # print("\n".join(map(str,subscriptions)))
     #print(len(subscriptions))
     
     subscriptions_df_format = pd.DataFrame(subscriptions)
     # subscriptions_df_format.to_csv("list1.csv")
 
+
     
-    
-recommend()
+# recommend()
 
 
 

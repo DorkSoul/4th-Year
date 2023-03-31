@@ -378,8 +378,8 @@ document.addEventListener("DOMContentLoaded", function () {
       subscriptions = _subscriptions;
       recommendations = _recommendations;
       displayRecommendations(userSubscriptions);
-      displayUserSuggestions(userSuggestions);
-      displaySimilarSubs(similarSubscriptionIds, userSubscriptions); // Pass userSubscriptions to displaySimilarSubs
+      // displayUserSuggestions(userSuggestions);
+      // displaySimilarSubs(similarSubscriptionIds, userSubscriptions); // Pass userSubscriptions to displaySimilarSubs
       setupEventListeners();
     })
     .catch(error => {

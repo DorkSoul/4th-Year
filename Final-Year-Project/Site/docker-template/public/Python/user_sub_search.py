@@ -32,10 +32,10 @@ def find_users_with_matching_subs(filename, target_sub_ids):
                 
     return [user_id for user_id, count in user_count.items() if count == len(target_sub_ids)]
 
-target_sub_ids = {1,2,3,4,5}  # Specify the sub_ids you are looking for
+target_sub_ids = {1}  # Specify the sub_ids you are looking for
 
 matching_users = find_users_with_matching_subs(filename, target_sub_ids)
-# print("User_ids with specified matching sub_ids:", matching_users)
+print("User_ids with specified matching sub_ids:", matching_users)
 
 
 def get_user_subscriptions(user_id, user_subs_file, subscriptions_file):
@@ -59,7 +59,7 @@ cwd = os.getcwd()
 user_subs_file = os.path.join(cwd, 'user_subs.csv')
 subscriptions_file = os.path.join(cwd, 'subscriptions.csv')
 
-user_id = 962  # Specify the user_id for which you want to list subscriptions
+user_id = 9869  # Specify the user_id for which you want to list subscriptions
 user_subscriptions = get_user_subscriptions(user_id, user_subs_file, subscriptions_file)
 print(f"Subscriptions for user {user_id}:")
 for sub_id, name in user_subscriptions.items():
