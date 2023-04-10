@@ -1,0 +1,45 @@
+maze_size(5, 5).
+start(3, 3).
+goal(1, 5).
+blocked(2, 2).
+blocked(2, 3).
+blocked(2, 4).
+blocked(3, 4).
+blocked(4, 4).
+blocked(4, 3).
+
+valid(X, Y) :-
+    maze_size(MaxX, MaxY),
+    X > 0, X =< MaxX,
+    Y > 0, Y =< MaxY,
+    not(blocked(X, Y)).
+
+move(X, Y, X1, Y) :-
+    maze_size(MaxX, _),
+    X1 is X + 1, X1 =< MaxX;
+    X1 is X - 1, X1 > 0.
+
+move(X, Y, X, Y1) :-
+    maze_size(_, MaxY),
+    Y1 is Y + 1, Y1 =< MaxY;
+    Y1 is Y - 1, Y1 > 0.
+
+bfs(Start, Goal, Path) :-
+    bfs_queue([[(Start, [])]], Goal, Path).
+
+bfs_queue([((X, Y), Path) | _], (X, Y), PathReversed) :-
+    reverse(Path, PathReversed).
+bfs_queue([(Current, Path) | Rest], Goal, Result) :-
+    findall(((NewX, NewY), [(NewX, NewY) | Path]),
+        (move(X, Y, NewX, NewY),
+         valid(NewX, NewY),
+         not(member((NewX, NewY), Path))
+        ), NewPaths),
+    append(Rest, NewPaths, NewQueue),
+    bfs_queue(NewQueue, Goal, Result).
+
+run_bfs :-
+    start(SX, SY),
+    goal(GX, GY),
+    bfs((SX, SY), (GX, GY), Path),
+    writeln(Path).
