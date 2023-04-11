@@ -18,47 +18,6 @@ move(right, X/Y, X1/Y) :- X < 5, X1 is X+1, \+ blocked(X1,Y).
 move(down, X/Y, X/Y1) :- Y < 5, Y1 is Y+1, \+ blocked(X,Y1).
 move(left, X/Y, X1/Y) :- X > 1, X1 is X-1, \+ blocked(X1,Y).
 
-% Define the depth-first search algorithm
-dfs(Goal, Path) :-
-    start(StartX, StartY),
-    dfs_helper(Goal, [(StartX, StartY)], Path).
-
-dfs_helper(Goal, [(GoalX, GoalY)|Visited], [(GoalX, GoalY)|Visited]) :-
-    Goal = (GoalX, GoalY).
-dfs_helper(Goal, [(X, Y)|Visited], Path) :-
-    \+ Goal = (X, Y),
-    move(_, X/Y, X1/Y1),
-    \+ member((X1, Y1), [(X, Y)|Visited]),
-    dfs_helper(Goal, [(X1, Y1),(X, Y)|Visited], Path).
-
-
-
-
-
-
-
-
-ids(Goal, Path) :-
-    start(StartX, StartY),
-    ids_helper(Goal, [(StartX, StartY)], Path, 0).
-
-ids_helper(Goal, [(GoalX, GoalY)|Visited], [(GoalX, GoalY)|Visited], _) :-
-    Goal = (GoalX, GoalY).
-ids_helper(Goal, [(X, Y)|Visited], Path, Depth) :-
-    \+ Goal = (X, Y),
-    Depth < 10, % set a maximum depth limit, e.g. 10
-    move(_, X/Y, X1/Y1),
-    \+ member((X1, Y1), [(X, Y)|Visited]),
-    Depth1 is Depth+1,
-    ids_helper(Goal, [(X1, Y1),(X, Y)|Visited], Path, Depth1).
-	
-	
-	
-	
-	
-	
-
-
 % Define the Manhattan distance heuristic function
 manhattan_distance((X1,Y1), (X2,Y2), D) :-
     D is abs(X1-X2) + abs(Y1-Y2).
