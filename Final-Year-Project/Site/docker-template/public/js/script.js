@@ -97,7 +97,7 @@ fetch("/subscriptions", {
         subStart.classList.add('sub_data');
         const startLabel = document.createElement('div');
         startLabel.classList.add('text-block-3');
-        startLabel.textContent = 'sort group';
+        startLabel.textContent = 'Type';
         startLabel.style.backgroundColor = '#0096ff';
         startLabel.style.marginBottom = '10px';
         subStart.appendChild(startLabel);
@@ -111,7 +111,7 @@ fetch("/subscriptions", {
         subTotal.classList.add('sub_data');
         const totalLabel = document.createElement('div');
         totalLabel.classList.add('text-block-4');
-        totalLabel.textContent = 'recurring length';
+        totalLabel.textContent = 'Frequency';
         totalLabel.style.backgroundColor = '#0096ff';
         totalLabel.style.marginBottom = '10px';
         subTotal.appendChild(totalLabel);
